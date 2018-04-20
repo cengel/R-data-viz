@@ -188,23 +188,25 @@ To get the most out of this workshop you should have:
   \begin{itemize}
   \tightlist
   \item
-    Download \texttt{MS\_trafficstops\_bw.csv} from here:
-    \url{https://github.com/cengel/R-data-wrangling/raw/master/data/MS_trafficstops_bw_age.csv}
+    Download \texttt{MS\_stops.csv} from here:
+    \url{https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv}
   \item
-    Download \texttt{MS\_demographic.csv} from here:
-    \url{https://github.com/cengel/R-data-wrangling/raw/master/data_output/MS_demographic.csv}
+    Download \texttt{MS\_county\_stops.csv} from here:
+    \url{https://github.com/cengel/R-data-viz/raw/master/data/MS_county_stops.csv}
   \item
-    If you have your working directory set to \texttt{R-data-viz} with a
-    folder called \texttt{data} you can copy, paste, and run the
-    following two lines in R:
+    If you have your working directory set to \texttt{R-data-viz} which
+    contains a folder called \texttt{data} you can copy, paste, and run
+    the following two lines in R:
   \end{itemize}
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-wrangling/raw/master/data/MS_trafficstops_bw_age.csv"}\NormalTok{, }\StringTok{"data/MS_trafficstops_bw_age.csv"}\NormalTok{)}
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv"}\NormalTok{, }
+              \StringTok{"data/MS_stops.csv"}\NormalTok{)}
 
-\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-wrangling/raw/master/data_output/MS_demographic.csv"}\NormalTok{, }\StringTok{"data/MS_demographic.csv"}\NormalTok{)}
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_county.csv"}\NormalTok{, }
+              \StringTok{"data/MS_stops_by_county.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -218,9 +220,9 @@ To get the most out of this workshop you should have:
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
-Murrell, P. (2012): R Graphics, 2nd ed. Stanford
-\href{https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford\&xmlId=9781439831779}{online
-access}
+Murrell, P. (2012): R Graphics, 2nd ed.
+\href{https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford\&xmlId=9781439831779}{Stanford
+only online access}
 
 Rahlf, T (2017): Data Visualisation with R.
 \url{http://www.springer.com/us/book/9783319497501}
@@ -259,8 +261,11 @@ Learning Objectives
   Add a graphical representation of the data in the plot (points, lines,
   bars) adding ``geoms'' layers
 \item
-  Produce scatter plots, barplots, boxplots, and line plots using
+  Produce univariate plots, barplots, boxplots, and line plots using
   ggplot.
+\item
+  Produce bivariate plots, like scatter plots, hex plots, stacked bar,
+  and bivariate line charts using ggplot.
 \item
   Modify the aesthetics for the entire plot as well as for individual
   ``geoms'' layers
@@ -292,19 +297,18 @@ Next we load the data into R:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'data/MS_demographic.csv'}\NormalTok{)}
+\NormalTok{stops_county <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'data/MS_stops_by_county.csv'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-(If you need to, you can also download the data from here:
-\url{https://github.com/cengel/R-data-wrangling/raw/master/data_output/MS_demographic.csv})
-
-Let's take a look at the data and see what we've got.
+These data are a small subset extracted from the
+openpolicing.stanford.edu dataset and contain aggregated for each county
+in Missisippi. Let's take a look at the data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(MS_demographic)}
-\KeywordTok{str}\NormalTok{(MS_demographic)}
+\KeywordTok{head}\NormalTok{(stops_county)}
+\KeywordTok{str}\NormalTok{(stops_county)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -337,7 +341,7 @@ To build a ggplot we need to:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ MS_demographic)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -351,7 +355,7 @@ To build a ggplot we need to:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ MS_demographic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped))}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -365,7 +369,7 @@ To build a ggplot we need to:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ MS_demographic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -381,7 +385,7 @@ generated with code like this:
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Assign plot to a variable}
-\NormalTok{MS_plot <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ MS_demographic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped))}
+\NormalTok{MS_plot <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped))}
 
 \CommentTok{# Draw the plot}
 \NormalTok{MS_plot }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
@@ -442,7 +446,7 @@ same thing as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
 \end{Highlighting}
@@ -454,7 +458,7 @@ few odd outliers in our data before we pass them to ggplot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
@@ -469,7 +473,7 @@ overplotting:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{)}
@@ -482,7 +486,7 @@ We can also add a color for all the points:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{)}
@@ -495,7 +499,7 @@ We can add another layer to the plot with \texttt{+}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
@@ -514,7 +518,7 @@ removed from the plot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
@@ -603,7 +607,7 @@ have also flipped the coordinates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{MS_demographic }\OperatorTok{%>%}\StringTok{   }
+\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{   }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ county_name, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped }\OperatorTok{-}\StringTok{ }\NormalTok{pct_black_stopped)) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\KeywordTok{geom_col}\NormalTok{() }\OperatorTok{+}\StringTok{ }
@@ -1069,9 +1073,9 @@ adjusting the appropriate arguments (\texttt{width}, \texttt{height} and
 Note: The parameters \texttt{width} and \texttt{height} also determine
 the font size in the saved plot.
 
-\chapter{\texorpdfstring{Alternatives: R base \texttt{plot} and
+\chapter{\texorpdfstring{Alternatives: R base graphis and
 \texttt{lattice}
-graphs}{Alternatives: R base plot and lattice graphs}}\label{baseplot}
+graphs}{Alternatives: R base graphis and lattice graphs}}\label{baseplot}
 
 \begin{quote}
 Learning Objectives
@@ -1085,18 +1089,16 @@ Learning Objectives
 \item
   Make a simple plot with R lattice package
 \item
-  Explain the difference between this and ggplot approach - evaluate
-  pros and cons
+  Explain the difference to the ggplot approach and evaluate pros and
+  cons
 \end{itemize}
 \end{quote}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\section{\texorpdfstring{R base \texttt{plot}
-commands}{R base plot commands}}\label{r-base-plot-commands}
+\section{R base graphics}\label{r-base-graphics}
 
 We will use a simple dataset that comes with the base R install.
-\textbf{USE DIFFERENT DATA}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1114,7 +1116,7 @@ We will use a simple dataset that comes with the base R install.
 #> 6     9   10
 \end{verbatim}
 
-R base comes wiht a simple plot command that can be applied to the data
+R base comes with a simple plot command that can be applied to the data
 like that:
 
 \begin{Shaded}
@@ -1125,8 +1127,11 @@ like that:
 
 \includegraphics{R-data-viz_files/figure-latex/plot-cars-1.pdf}
 
-Other things one can do with plot. Walk through arguments. How to do
-multiple plots.
+Other things one can do with plot.
+
+Walk through \texttt{plot} arguments and options.
+
+How to do multiple plots.
 
 \url{https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.pdf} and
 code:
@@ -1140,10 +1145,9 @@ Challenge: make a plot
 Challenge: how would you do this with ggplot?
 \end{quote}
 
-Lastly, there is \texttt{ggplot}. Which works like this:
-
-Other base package plot commands: histogram, boxplot, stripchart,
-barplot, mosaicplot.. dotchart
+Other base package plot commands: \texttt{histogram}, \texttt{boxplot},
+\texttt{stripchart}, \texttt{barplot}, \texttt{mosaicplot},
+\texttt{dotchart} and more.
 
 \url{http://www.cyclismo.org/tutorial/R/plotting.html} and
 \url{http://www.cyclismo.org/tutorial/R/intermediatePlotting.html}
@@ -1224,10 +1228,6 @@ The same with ggplot:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> `geom_smooth()` using method = 'loess'
-\end{verbatim}
-
 \includegraphics{R-data-viz_files/figure-latex/ggplot-iris-1.pdf}
 
 pros - cons?
@@ -1296,8 +1296,8 @@ do that really well. Below are a few examples.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(}\StringTok{'visNetwork'}\NormalTok{) }
-\NormalTok{nodes <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"demo-data/network/Dataset1-Media-Example-NODES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
-\NormalTok{links <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"demo-data/network/Dataset1-Media-Example-EDGES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
+\NormalTok{nodes <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-NODES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
+\NormalTok{links <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
 \NormalTok{nodes}\OperatorTok{$}\NormalTok{shape <-}\StringTok{ "dot"}  
 \NormalTok{nodes}\OperatorTok{$}\NormalTok{shadow <-}\StringTok{ }\OtherTok{TRUE} \CommentTok{# Nodes will drop shadow}
 \NormalTok{nodes}\OperatorTok{$}\NormalTok{title <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{media }\CommentTok{# Text on click}
@@ -1321,15 +1321,31 @@ do that really well. Below are a few examples.
 \section{\texorpdfstring{Maps (e.g.
 \textbf{\texttt{tmap}})}{Maps (e.g. tmap)}}\label{maps-e.g.-tmap}
 
+For this demo we first need to download the data. If you have your
+working directory set to \texttt{R-data-viz} and it contains a folder
+called \texttt{data}, this will download and extract the map data into a
+subfolder of your \texttt{data} folder, called \texttt{map}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/map.zip"}\NormalTok{,}
+              \StringTok{"data/map.zip"}\NormalTok{)}
+\KeywordTok{unzip}\NormalTok{(}\StringTok{"data/map.zip"}\NormalTok{, }\DataTypeTok{exdir=}\StringTok{"data"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now, here is the map.
+\includegraphics{R-data-viz_files/figure-latex/tmap-demo-1.pdf}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(tmap)}
 \KeywordTok{library}\NormalTok{(tmaptools)}
 \KeywordTok{suppressPackageStartupMessages}\NormalTok{(}\KeywordTok{library}\NormalTok{(sf))}
-
-\NormalTok{london <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"demo-data/map"}\NormalTok{, }\StringTok{"London"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{crime_densities <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"demo-data/map"}\NormalTok{, }\StringTok{"Crimes"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{thames <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"demo-data/map"}\NormalTok{, }\StringTok{"Thames"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+              
+\NormalTok{london <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"London"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{crime_densities <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Crimes"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{thames <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Thames"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
 
 \KeywordTok{tm_shape}\NormalTok{(crime_densities) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{tm_fill}\NormalTok{(}\DataTypeTok{col =} \StringTok{"level"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"YlOrRd"}\NormalTok{, }
@@ -1341,8 +1357,6 @@ do that really well. Below are a few examples.
 \KeywordTok{tm_style_gray}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Crimes in Greater London}\CharTok{\textbackslash{}n}\StringTok{October 2015"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/tmap-demo-1.pdf}
 
 Good starting places to look for additional examples are the R Graph
 Gallery: \url{https://www.r-graph-gallery.com/all-graphs/} and the CRAN

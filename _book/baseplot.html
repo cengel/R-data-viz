@@ -127,8 +127,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.7" data-path="data-visualization-with-ggplot2.html"><a href="data-visualization-with-ggplot2.html#ggplot2-themes"><i class="fa fa-check"></i><b>1.7</b> <strong><code>ggplot2</code></strong> themes</a></li>
 <li class="chapter" data-level="1.8" data-path="data-visualization-with-ggplot2.html"><a href="data-visualization-with-ggplot2.html#customization"><i class="fa fa-check"></i><b>1.8</b> Customization</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="baseplot.html"><a href="baseplot.html"><i class="fa fa-check"></i><b>2</b> Alternatives: R base <code>plot</code> and <code>lattice</code> graphs</a><ul>
-<li class="chapter" data-level="2.1" data-path="baseplot.html"><a href="baseplot.html#r-base-plot-commands"><i class="fa fa-check"></i><b>2.1</b> R base <code>plot</code> commands</a></li>
+<li class="chapter" data-level="2" data-path="baseplot.html"><a href="baseplot.html"><i class="fa fa-check"></i><b>2</b> Alternatives: R base graphis and <code>lattice</code> graphs</a><ul>
+<li class="chapter" data-level="2.1" data-path="baseplot.html"><a href="baseplot.html#r-base-graphics"><i class="fa fa-check"></i><b>2.1</b> R base graphics</a></li>
 <li class="chapter" data-level="2.2" data-path="baseplot.html"><a href="baseplot.html#lattice-package"><i class="fa fa-check"></i><b>2.2</b> <code>lattice</code> package</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="domains.html"><a href="domains.html"><i class="fa fa-check"></i><b>3</b> Domain specific graphs</a><ul>
@@ -161,20 +161,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="baseplot" class="section level1">
-<h1><span class="header-section-number">Chapter 2</span> Alternatives: R base <code>plot</code> and <code>lattice</code> graphs</h1>
+<h1><span class="header-section-number">Chapter 2</span> Alternatives: R base graphis and <code>lattice</code> graphs</h1>
 <blockquote>
 <p>Learning Objectives</p>
 <ul>
 <li>Make a plot with base plot package</li>
 <li>Make a plot with other base plot commands</li>
 <li>Make a simple plot with R lattice package</li>
-<li>Explain the difference between this and ggplot approach - evaluate pros and cons</li>
+<li>Explain the difference to the ggplot approach and evaluate pros and cons</li>
 </ul>
 </blockquote>
 <hr />
-<div id="r-base-plot-commands" class="section level2">
-<h2><span class="header-section-number">2.1</span> R base <code>plot</code> commands</h2>
-<p>We will use a simple dataset that comes with the base R install. <strong>USE DIFFERENT DATA</strong></p>
+<div id="r-base-graphics" class="section level2">
+<h2><span class="header-section-number">2.1</span> R base graphics</h2>
+<p>We will use a simple dataset that comes with the base R install.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(cars)</code></pre></div>
 <pre><code>#&gt;   speed dist
 #&gt; 1     4    2
@@ -183,10 +183,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 #&gt; 4     7   22
 #&gt; 5     8   16
 #&gt; 6     9   10</code></pre>
-<p>R base comes wiht a simple plot command that can be applied to the data like that:</p>
+<p>R base comes with a simple plot command that can be applied to the data like that:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(cars)</code></pre></div>
 <p><img src="R-data-viz_files/figure-html/plot-cars-1.png" width="672" /></p>
-<p>Other things one can do with plot. Walk through arguments. How to do multiple plots.</p>
+<p>Other things one can do with plot.</p>
+<p>Walk through <code>plot</code> arguments and options.</p>
+<p>How to do multiple plots.</p>
 <p><a href="https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.pdf" class="uri">https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.pdf</a> and code: <a href="https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.html" class="uri">https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.html</a></p>
 <blockquote>
 <p>Challenge: make a plot</p>
@@ -194,8 +196,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>Challenge: how would you do this with ggplot?</p>
 </blockquote>
-<p>Lastly, there is <code>ggplot</code>. Which works like this:</p>
-<p>Other base package plot commands: histogram, boxplot, stripchart, barplot, mosaicplot.. dotchart</p>
+<p>Other base package plot commands: <code>histogram</code>, <code>boxplot</code>, <code>stripchart</code>, <code>barplot</code>, <code>mosaicplot</code>, <code>dotchart</code> and more.</p>
 <p><a href="http://www.cyclismo.org/tutorial/R/plotting.html" class="uri">http://www.cyclismo.org/tutorial/R/plotting.html</a> and <a href="http://www.cyclismo.org/tutorial/R/intermediatePlotting.html" class="uri">http://www.cyclismo.org/tutorial/R/intermediatePlotting.html</a></p>
 <p><a href="https://www.harding.edu/fmccown/r/" class="uri">https://www.harding.edu/fmccown/r/</a></p>
 <p><a href="http://courses.atlas.illinois.edu/spring2017/STAT/STAT200/RProgramming/Plotting.html" class="uri">http://courses.atlas.illinois.edu/spring2017/STAT/STAT200/RProgramming/Plotting.html</a></p>
@@ -240,7 +241,6 @@ Figure 2.1: Iris Petal and Sepal (Source: kaggle.com)
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="kw">jitter</span>(Petal.Width), <span class="kw">jitter</span>(Petal.Length)), <span class="dt">size=</span>.<span class="dv">2</span>, <span class="dt">se=</span>F) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_classic</span>()</code></pre></div>
-<pre><code>#&gt; `geom_smooth()` using method = &#39;loess&#39;</code></pre>
 <p><img src="R-data-viz_files/figure-html/ggplot-iris-1.png" width="672" /></p>
 <p>pros - cons?</p>
 <p>More about <code>lattice</code>:</p>

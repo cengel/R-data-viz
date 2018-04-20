@@ -43,7 +43,7 @@ main_heatmap(measles, name = "Measles<br>Cases", x_categorical = FALSE,
 
 ```{r network-demo, results='show'}
 library('visNetwork') 
-nodes <- read.csv("https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+nodes <- read.csv("https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-NODES.csv", header=T, as.is=T)
 links <- read.csv("https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
 nodes$shape <- "dot"  
 nodes$shadow <- TRUE # Nodes will drop shadow
@@ -74,8 +74,26 @@ unzip("data/map.zip", exdir="data")
 ```
 
 Now, here is the map.
+```{r tmap-demo, echo=FALSE}
+library(tmap)
+library(tmaptools)
+suppressPackageStartupMessages(library(sf))
+              
+london <- st_read("demo-data/map", "London", quiet = TRUE)
+crime_densities <- st_read("demo-data/map", "Crimes", quiet = TRUE)
+thames <- st_read("demo-data/map", "Thames", quiet = TRUE)
 
-```{r tmap-demo}
+tm_shape(crime_densities) +
+  tm_fill(col = "level", palette = "YlOrRd", 
+    title = expression("Crimes per " * km^2)) + 
+tm_shape(london) + tm_borders() +
+tm_shape(thames) + tm_lines(col = "steelblue", lwd = 4) +
+tm_compass(position = c("left", "bottom")) +
+tm_scale_bar(position = c("left", "bottom")) + 
+tm_style_gray(title = "Crimes in Greater London\nOctober 2015")
+```
+
+```{r tmap-demo-script, eval=FALSE}
 library(tmap)
 library(tmaptools)
 suppressPackageStartupMessages(library(sf))
