@@ -24,16 +24,16 @@ To get the most out of this workshop you should have:
 **Recommended**: 
 
 - Create a new RStudio project `R-data-viz` in a new folder `R-data-viz` and download both CSV files into a subdirectory called `data`:
-    - Download `MS_stops.csv` from here: https://github.com/cengel/R-data-wrangling/raw/master/data/MS_stops.csv
-    - Download `MS_county_stops.csv` from here: https://github.com/cengel/R-data-wrangling/raw/master/data/MS_county_stops.csv
+    - Download `MS_stops.csv` from here: https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv
+    - Download `MS_county_stops.csv` from here: https://github.com/cengel/R-data-viz/raw/master/data/MS_county_stops.csv
     - If you have your working directory set to `R-data-viz` which contains a folder called `data` you can copy, paste, and run the following two lines in R:
 
 ```{r download-files, eval=FALSE}
-download.file("https://github.com/cengel/R-data-wrangling/raw/master/data/MS_stops.csv", 
+download.file("https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv", 
               "data/MS_stops.csv")
 
-download.file("https://github.com/cengel/R-data-wrangling/raw/master/data/MS_county_stops.csv", 
-              "data/MS_county_stops.csv")
+download.file("https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_county.csv", 
+              "data/MS_stops_by_county.csv")
 ```
 - Open up a new R Script file `R-data-viz.R` for the code you'll create during the workshop.
 

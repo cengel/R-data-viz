@@ -1,8 +1,8 @@
 ```{r, echo=FALSE, purl=FALSE, message=FALSE}
 knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
 library(lubridate)
-MS_demographic <- read.csv('data/MS_county_stops.csv')
-trafficstops <- read.csv('data/MS_stops.csv')
+stops_county <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_county.csv')
+trafficstops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')
 trafficstops$stop_date <- ymd(trafficstops$stop_date)
 ```
 
@@ -32,13 +32,13 @@ library(tidyverse)
 
 Next we load the data into R:
 ```{r load-county-data, eval=FALSE,  purl=FALSE}
-MS_county_stops <- read.csv('data/MS_county_stops.csv')
+stops_county <- read.csv('data/MS_stops_by_county.csv')
 ```
 
 These data are a small subset extracted from the openpolicing.stanford.edu dataset and contain aggregated for each county in Missisippi. Let's take a look at the data.
 ```{r inspect-data, eval=FALSE,  purl=FALSE}
-head(MS_county_stops)
-str(MS_county_stops)
+head(stops_county)
+str(stops_county)
 ```
 
 
@@ -61,19 +61,19 @@ To build a ggplot we need to:
 - bind the plot to a specific data frame using the `data` argument
 
 ```{r, eval=FALSE, purl=FALSE}
-ggplot(data = MS_demographic)
+ggplot(data = stops_county)
 ```
 
 - define aesthetics (`aes`), by selecting the variables to be plotted and the variables to define the presentation such as plotting size, shape color, etc.
 
 ```{r, eval=FALSE, purl=FALSE}
-ggplot(data = MS_demographic, aes(x = pct_black_stopped, y = pct_white_stopped))
+ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped))
 ```
 
 - add "geoms" -- a graphical representation of the data in the plot (points, lines, bars). To add a geom to the plot use `+` operator
 
 ```{r first-ggplot, purl=FALSE, out.width='70%'}
-ggplot(data = MS_demographic, aes(x = pct_black_stopped, y = pct_white_stopped)) +
+ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped)) +
   geom_point()
 ```
 
@@ -84,7 +84,7 @@ plot can also be generated with code like this:
 
 ```{r, first-ggplot-with-plus, eval=FALSE, purl=FALSE}
 # Assign plot to a variable
-MS_plot <- ggplot(data = MS_demographic, aes(x = pct_black_stopped, y = pct_white_stopped))
+MS_plot <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped))
 
 # Draw the plot
 MS_plot + geom_point()
@@ -92,7 +92,7 @@ MS_plot + geom_point()
 
 ```{r, eval=FALSE, purl=TRUE, echo=FALSE, purl=FALSE}
 ## Create a ggplot and draw it.
-MS_plot <- ggplot(data = MS_demographic, aes(x = pct_black_stopped, y = pct_white_stopped))
+MS_plot <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped))
 MS_plot + geom_point()
 ```
 
@@ -126,7 +126,7 @@ Building plots with ggplot can be of great help when you engage in exploratory d
 Conveniently, `ggplot` works with pipes. The code below does the same thing as above:
 
 ```{r ggplot-with-pipe, eval=FALSE, purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point() 
 ```
@@ -134,7 +134,7 @@ MS_demographic %>%
 We pipe the content of the table into `ggplot()`, so we can omit the first (`data =` argument). Now let's use this to clean up a few odd outliers in our data before we pass them to ggplot.
 
 ```{r ggplot-with-filter, results='show', purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point() 
@@ -143,7 +143,7 @@ MS_demographic %>%
 Then we can start modifying this plot to extract more information from it. For instance, we can add transparency (`alpha`) to avoid overplotting:
 
 ```{r adding-transparency, results='show', purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point(alpha = 0.3)
@@ -152,7 +152,7 @@ MS_demographic %>%
 We can also add a color for all the points:
 
 ```{r adding-color, results='show', purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point(alpha = 0.3, color= "blue")
@@ -161,7 +161,7 @@ MS_demographic %>%
 We can add another layer to the plot with `+`: 
 
 ```{r add-abline, results='show', purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point(alpha = 0.3, color= "blue") +
@@ -171,7 +171,7 @@ MS_demographic %>%
 If we wanted to "zoom" into the plot, we could filter to a smaller range of values before passing them to ggplot, but we can also tell ggplot to only plot the x and y values for certain ranges. For this we use `scale_x_continuous` and `scale_y_continuous`. You will receive a message from ggplot telling you how many rows it has removed from the plot.
 
 ```{r zoom-in, results='show', purl=FALSE, out.width='70%'}
-MS_demographic %>% 
+stops_county %>% 
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
   ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
   geom_point(alpha = 0.3, color= "blue") +
@@ -229,7 +229,7 @@ The other type of barchart, `geom_col`, is used if you want the heights of the b
 For example, we can use `geom_col` for a different way of visualizing the data shown in the scatterplot above. For readability I have also flipped the coordinates:
 
 ```{r demograph-barplot, results='show', purl=FALSE, fig.height=7}
-MS_demographic %>%   
+stops_county %>%   
   filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>%
   ggplot(aes(x = county_name, y = pct_white_stopped - pct_black_stopped)) + 
     geom_col() + 

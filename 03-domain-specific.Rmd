@@ -43,8 +43,8 @@ main_heatmap(measles, name = "Measles<br>Cases", x_categorical = FALSE,
 
 ```{r network-demo, results='show'}
 library('visNetwork') 
-nodes <- read.csv("demo-data/network/Dataset1-Media-Example-NODES.csv", header=T, as.is=T)
-links <- read.csv("demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+nodes <- read.csv("https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+links <- read.csv("https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
 nodes$shape <- "dot"  
 nodes$shadow <- TRUE # Nodes will drop shadow
 nodes$title <- nodes$media # Text on click
@@ -65,14 +65,24 @@ visNetwork(nodes, links) %>%
 
 ## Maps (e.g. **`tmap`**) 
 
+For this demo we first need to download the data. If you have your working directory set to `R-data-viz` and it contains a folder called `data`, this will download and extract the map data into a subfolder of your `data` folder, called `map`:
+
+```{r tmap-download, eval=FALSE}
+download.file("https://github.com/cengel/R-data-viz/raw/master/demo-data/map.zip",
+              "data/map.zip")
+unzip("data/map.zip", exdir="data")
+```
+
+Now, here is the map.
+
 ```{r tmap-demo}
 library(tmap)
 library(tmaptools)
 suppressPackageStartupMessages(library(sf))
-
-london <- st_read("demo-data/map", "London", quiet = TRUE)
-crime_densities <- st_read("demo-data/map", "Crimes", quiet = TRUE)
-thames <- st_read("demo-data/map", "Thames", quiet = TRUE)
+              
+london <- st_read("data/map", "London", quiet = TRUE)
+crime_densities <- st_read("data/map", "Crimes", quiet = TRUE)
+thames <- st_read("data/map", "Thames", quiet = TRUE)
 
 tm_shape(crime_densities) +
   tm_fill(col = "level", palette = "YlOrRd", 
