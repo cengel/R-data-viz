@@ -1,0 +1,88 @@
+```{r, echo=FALSE, purl=FALSE, message=FALSE}
+knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
+```
+
+# Domain specific graphs {#domains}
+
+> Learning Objectives
+>
+> * Be aware of specialized graph packages and know where to look for them
+> * Understand the basic structure of iheatmapr, tmap, and visNetwork examples
+> * Modify parameters of provided graph examples
+
+------------
+
+`ggplot` can get you a long way, but if you need to do a particular, more complex graph it is worth checking if there might be an R package for that. Typically it would do one type of visualization and do that really well. Below are a few examples.
+
+## Heatmaps (e.g. **`iheatmapr`**)
+
+```{r heatmap-demo, results='show'}
+library(iheatmapr)
+data(measles, package = "iheatmapr")
+
+main_heatmap(measles, name = "Measles<br>Cases", x_categorical = FALSE,
+             layout = list(font = list(size = 8))) %>%
+  add_col_groups(ifelse(1930:2001 < 1961,"No","Yes"),
+                  side = "bottom", name = "Vaccine<br>Introduced?",
+                  title = "Vaccine?",
+                  colors = c("lightgray","blue")) %>%
+  add_col_labels(ticktext = seq(1930,2000,10),font = list(size = 8)) %>%
+  add_row_labels(size = 0.3,font = list(size = 6)) %>% 
+  add_col_summary(layout = list(title = "Average<br>across<br>states"),
+                  yname = "summary")  %>%                 
+  add_col_title("Measles Cases from 1930 to 2001", side= "top") %>%
+  add_row_summary(groups = TRUE, 
+                  type = "bar",
+                  layout = list(title = "Average<br>per<br>year",
+                                font = list(size = 8)))
+```
+
+
+
+## Networks (e.g. **`visNetwork`**)
+
+```{r network-demo, results='show'}
+library('visNetwork') 
+nodes <- read.csv("demo-data/network/Dataset1-Media-Example-NODES.csv", header=T, as.is=T)
+links <- read.csv("demo-data/network/Dataset1-Media-Example-EDGES.csv", header=T, as.is=T)
+nodes$shape <- "dot"  
+nodes$shadow <- TRUE # Nodes will drop shadow
+nodes$title <- nodes$media # Text on click
+nodes$label <- nodes$type.label # Node label
+nodes$size <- nodes$audience.size # Node size
+nodes$borderWidth <- 2 # Node border width
+
+nodes$color.background <- c("slategrey", "tomato", "gold")[nodes$media.type]
+nodes$color.border <- "black"
+nodes$color.highlight.background <- "orange"
+nodes$color.highlight.border <- "darkred"
+
+visNetwork(nodes, links) %>%
+  visOptions(highlightNearest = TRUE, 
+             selectedBy = "type.label")
+```
+
+
+## Maps (e.g. **`tmap`**) 
+
+```{r tmap-demo}
+library(tmap)
+library(tmaptools)
+suppressPackageStartupMessages(library(sf))
+
+london <- st_read("demo-data/map", "London", quiet = TRUE)
+crime_densities <- st_read("demo-data/map", "Crimes", quiet = TRUE)
+thames <- st_read("demo-data/map", "Thames", quiet = TRUE)
+
+tm_shape(crime_densities) +
+  tm_fill(col = "level", palette = "YlOrRd", 
+    title = expression("Crimes per " * km^2)) + 
+tm_shape(london) + tm_borders() +
+tm_shape(thames) + tm_lines(col = "steelblue", lwd = 4) +
+tm_compass(position = c("left", "bottom")) +
+tm_scale_bar(position = c("left", "bottom")) + 
+tm_style_gray(title = "Crimes in Greater London\nOctober 2015")
+```
+
+
+Good starting places to look for additional examples are the R Graph Gallery: https://www.r-graph-gallery.com/all-graphs/ and the CRAN Task View: https://CRAN.R-project.org/view=Graphics. 

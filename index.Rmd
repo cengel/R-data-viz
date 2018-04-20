@@ -1,0 +1,55 @@
+--- 
+title: "Data Visualization with R"
+author: "Claudia A Engel"
+date: "Last updated: `r format(Sys.time(), '%B %d, %Y')`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: cengel/R-data-viz
+description: "Workshop materials for Data Visualization with R"
+---
+
+
+# Prerequisites and Preparations {-}
+
+To get the most out of this workshop you should have:
+
+- a **basic knowledge** of R and/or be familiar with the topics covered in the [Introduction to R](https://cengel.github.io/R-intro/).
+- have a recent version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/) installed. 
+- have installed the [`tidyverse`](http://tidyverse.org/) package.
+
+**Recommended**: 
+
+- Create a new RStudio project `R-data-viz` in a new folder `R-data-viz` and download both CSV files into a subdirectory called `data`:
+    - Download `MS_stops.csv` from here: https://github.com/cengel/R-data-wrangling/raw/master/data/MS_stops.csv
+    - Download `MS_county_stops.csv` from here: https://github.com/cengel/R-data-wrangling/raw/master/data/MS_county_stops.csv
+    - If you have your working directory set to `R-data-viz` which contains a folder called `data` you can copy, paste, and run the following two lines in R:
+
+```{r download-files, eval=FALSE}
+download.file("https://github.com/cengel/R-data-wrangling/raw/master/data/MS_stops.csv", 
+              "data/MS_stops.csv")
+
+download.file("https://github.com/cengel/R-data-wrangling/raw/master/data/MS_county_stops.csv", 
+              "data/MS_county_stops.csv")
+```
+- Open up a new R Script file `R-data-viz.R` for the code you'll create during the workshop.
+
+
+
+## References {-}
+
+Murrell, P. (2012): R Graphics, 2nd ed. [Stanford only online access](https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford&xmlId=9781439831779)
+
+Rahlf, T (2017): Data Visualisation with R. http://www.springer.com/us/book/9783319497501
+
+Wickham, H. (2016): ggplot2: Elegant Graphics for Data Analysis. 2nd ed. http://link.springer.com/book/10.1007/978-3-319-24277-4
+
+
+## Acknowledgements {-}
+Part of the materials for this tutorial are adapted from http://datacarpentry.org and http://softwarecarpentry.org.
+
+Data sample taken from https://openpolicing.stanford.edu/
+
