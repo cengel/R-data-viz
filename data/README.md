@@ -74,3 +74,7 @@ Then:
   mutate(pct_black_stopped = driver_race_Black/black_pop,
          pct_white_stopped = driver_race_White/white_pop) %>% 
   write.csv(file = "data_output/MS_county_stops.csv", row.names = FALSE)`
+
+## Added two more fields 
+wb_delta <- pct_white_stopped - pct_black_stopped  
+bias <- ifelse(wb_delta < 0, "black bias", "white bias")
