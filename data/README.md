@@ -38,41 +38,45 @@ For the purpose of this tutorial I made the following changes:
 [18] Failure to yield right of way (FTY ROW) >> Carless driving
 [19] Failure to comply with financial responsibility law >> License/Permit/Insurance
 
-   traf <- read.csv("../R-intro/data/MS_trafficstops_bw.csv", na.strings=c("","NA"), stringsAsFactors = F)
+```r
+traf <- read.csv("../R-intro/data/MS_trafficstops_bw.csv", na.strings=c("","NA"), stringsAsFactors = F)
    traf$driver_birthdate[ymd(traf$driver_birthdate) >= ymd(traf$stop_date)] <- NA
    traf$driver_age <- round((ymd(traf$stop_date) - ymd(traf$driver_birthdate))/365)
    traf$driver_gender[traf$driver_gender == "F"] <- "female"
    traf$driver_gender[traf$driver_gender == "M"] <- "male"
    
-   write.csv(traf, "data/MS_stops.csv", row.names=F)
-
+write.csv(traf, "data/MS_stops.csv", row.names=F)
 ## recoding factor levels manually...
+```
 
 ## UPDATE: Added two more fields 
-
-   traf %>% 
-   mutate(wk_day = wday(stop_date, label = TRUE, y_day = yday(stop_date))) %>%
-   write.csv("data/MS_stops.csv", row.names = F)
-
+```r
+traf %>% 
+mutate(wk_day = wday(stop_date, label = TRUE, y_day = yday(stop_date))) %>%
+write.csv("data/MS_stops.csv", row.names = F)
+```
 # MS_county_stops.csv
 
 **Mississippi Traffic Stops by Police 2013-2016, aggregated per county with ACS population counts and ratios**
 
 Using estimated values of the 5 year average of the 2011-2015 American Community Survey (ACS) for: B02001. Race: Black Black or African American alone and White alone.
 
-   library(tidycensus)
-   #census_api_key("XXXXXX")
+```r
+library(tidycensus)
+#census_api_key("XXXXXX")
 
-   black_pop <- get_acs(geography = "county", variable = "B02001_003E", state="MS")
-   white_pop <- get_acs(geography = "county", variable = "B02001_002E", state="MS")
+black_pop <- get_acs(geography = "county", variable = "B02001_003E", state="MS")
+white_pop <- get_acs(geography = "county", variable = "B02001_002E", state="MS")
 
-   MS_pop <- data.frame(FIPS = as.numeric(black_pop$GEOID), black_pop = black_pop$estimate, white_pop = white_pop$estimate, total_pop = total_pop$estimate)
+MS_pop <- data.frame(FIPS = as.numeric(black_pop$GEOID), black_pop = black_pop$estimate, white_pop = white_pop$estimate, total_pop = total_pop$estimate)
 
-   #write.csv(MS_bw, "data/MS_acs2015_bw.csv", row.names = F)`
+#write.csv(MS_bw, "data/MS_acs2015_bw.csv", row.names = F)`
+```
 
 Then:
 
-   traf %>% 
+```r
+traf %>% 
      filter(!is.na(driver_race)) %>% 
      count(county_name, county_fips, driver_race) %>% 
      spread(driver_race, n, fill = 0, sep = "_") %>%  
@@ -80,7 +84,11 @@ Then:
      mutate(pct_black_stopped = driver_race_Black/black_pop,
          pct_white_stopped = driver_race_White/white_pop) %>% 
      write.csv(file = "data_output/MS_county_stops.csv", row.names = FALSE)`
+```
 
 ## UPDATE: Added two more fields 
-   wb_delta <- pct_white_stopped - pct_black_stopped  
-   bias <- ifelse(wb_delta < 0, "black bias", "white bias")
+
+```r
+wb_delta <- pct_white_stopped - pct_black_stopped  
+bias <- ifelse(wb_delta < 0, "black bias", "white bias")
+```
