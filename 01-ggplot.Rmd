@@ -1,9 +1,9 @@
 ```{r, echo=FALSE, purl=FALSE, message=FALSE}
 knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
-library(lubridate)
+library(tidyverse)
 stops_county <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_county.csv')
-trafficstops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')
-trafficstops$stop_date <- ymd(trafficstops$stop_date)
+#stops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')
+stops <- read.csv("data/MS_stops.csv")
 ```
 
 # Data Visualization with `ggplot2`{#ggplot}
@@ -13,8 +13,8 @@ trafficstops$stop_date <- ymd(trafficstops$stop_date)
 > * Bind a data frame to a plot
 > * Select variables to be plotted and variables to define the presentation such as size, shape, color, transparency, etc. by defining aesthetics (`aes`)
 > * Add a graphical representation of the data in the plot (points, lines, bars) adding "geoms" layers
-> * Produce univariate plots, barplots, boxplots, and line plots using ggplot.
-> * Produce bivariate plots, like scatter plots, hex plots, stacked bar, and bivariate line charts using ggplot.
+> * Produce univariate plots, barplots and histograms, area plots, boxplots, and line plots, using ggplot.
+> * Produce bivariate plots, like scatter plots, hex plots, stacked bars, and bivariate line charts using ggplot.
 > * Modify the aesthetics for the entire plot as well as for individual "geoms" layers
 > * Modify plot elements (labels, text, scale, orientation)
 > * Group observations by a factor variable
@@ -24,10 +24,33 @@ trafficstops$stop_date <- ymd(trafficstops$stop_date)
 
 --------------
 
-We start by loading the required packages. **`ggplot2`** is included in the **`tidyverse`** package.
+## What is **`ggplot2`**
+
+There are three main plotting systems in R, the [base plotting](https://www.statmethods.net/graphs/index.html) system, the [lattice](https://www.statmethods.net/advgraphs/trellis.html) package, and the [ggplot2](https://www.statmethods.net/advgraphs/ggplot2.html) package.
+
+Here we will introduce the `ggplot2` package, which has recently soared in popularity. `ggplot` allows you to create graphs for univariate and multivariate numerical and categorical data in a straightforward manner. It also allows for easy grouping and conditioning. It can generate complex plots create high quality graphics for publication.
+
+`ggplot` is built on [Leland Wilkinson's The Grammar of Graphics](https://stanford.idm.oclc.org/login?url=http://www.myilibrary.com?id=46066), the idea that any plot can be expressed from the same set of components:
+
+- a data set, 
+- a coordinate system, 
+- and a set of geoms–the visual representation of data points.
+
+The key to understanding `ggplot` is thinking about a figure in layers. This idea may be familiar to you if you have used image editing programs like Photoshop, Illustrator, or Inkscape.
+
+
+**`ggplot2`** provides a programmatic interface for
+specifying what variables to plot, how they are displayed, and what the general visual properties are, so we only need minimal changes if the underlying data change or if we decide to change from a bar plot to a scatterplot. This helps in creating plots quickly with minimal amounts of adjustments and tweaking.
+
+`ggplot` generally likes data in the 'long' format: i.e., a column for every dimension, and a row for every observation. Well structured data will save you lots of time when making figures with ggplot.
+
+
+## Plotting with **`ggplot2`**
+
+We start by loading the required package. Note that **`ggplot2`** is part of the collection of the [**`tidyverse`** packages](https://www.tidyverse.org).
 
 ```{r load-package, message=FALSE, purl=FALSE}
-library(tidyverse)
+library(ggplot2)
 ```
 
 Next we load the data into R:
@@ -35,28 +58,18 @@ Next we load the data into R:
 stops_county <- read.csv('data/MS_stops_by_county.csv')
 ```
 
-These data are a small subset extracted from the openpolicing.stanford.edu dataset and contain aggregated for each county in Missisippi. Let's take a look at the data.
-```{r inspect-data, eval=FALSE,  purl=FALSE}
+These data are a small subset extracted from the [openpolicing.stanford.edu](https://openpolicing.stanford.edu) dataset and contain traffic stops by police aggregated for each county in Missisippi. Let's take a look at the data.
+```{r inspect-data, purl=FALSE}
 head(stops_county)
 str(stops_county)
 ```
 
 
+The table contains two variables which represent for each county, and for both white and black, the ratio of drivers stopped out of the total population over 18: `pct_black_stopped` and `pct_white_stopped`. In order to see if there is any 'bias' we can plot the two values against each other and see if they line up at a 45 degree angle. 
 
-## Plotting with **`ggplot2`**
+`ggplot` graphics are built step by step by adding new elements (layers) using the `+` sign.
 
-**`ggplot2`** is a plotting package that makes it simple to create complex plots
-from data in a data frame. It provides a more programmatic interface for
-specifying what variables to plot, how they are displayed, and general visual
-properties, so we only need minimal changes if the underlying data change or if
-we decide to change from a bar plot to a scatterplot. This helps in creating
-publication quality plots with minimal amounts of adjustments and tweaking.
-
-ggplot generally likes data in the 'long' format: i.e., a column for every dimension, and a row for every observation. Well structured data will save you lots of time when making figures with ggplot.
-
-ggplot graphics are built step by step by adding new elements using the `+` sign.
-
-To build a ggplot we need to:
+To build a `ggplot` we need to:
 
 - bind the plot to a specific data frame using the `data` argument
 
@@ -82,7 +95,7 @@ to modify existing `ggplot` objects. This means you can easily set up plot
 "templates" and conveniently explore different types of plots, so the above
 plot can also be generated with code like this:
 
-```{r, first-ggplot-with-plus, eval=FALSE, purl=FALSE}
+```{r, first-ggplot-with-plus, purl=FALSE}
 # Assign plot to a variable
 MS_plot <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped))
 
@@ -90,17 +103,11 @@ MS_plot <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_
 MS_plot + geom_point()
 ```
 
-```{r, eval=FALSE, purl=TRUE, echo=FALSE, purl=FALSE}
-## Create a ggplot and draw it.
-MS_plot <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped))
-MS_plot + geom_point()
-```
-
 Notes:
 
 - Any parameters you set in the `ggplot()` function can be seen by any geom layers
   that you add (i.e., these are universal plot settings). This includes the x and y axis you set up in `aes()`.
-- Any parameters you set in the `geom_*()` function are treated independently of (and override) the settings defined globally in the `ggplot()` function. 
+- Any parameters you set in a `geom_*()` function are treated independently of (and possibly override) the settings defined globally in the `ggplot()` function. 
 - Geoms are plotted in the order they are added after each `+`, that means geoms last added will display on top of prior geoms.
 - The `+` sign used to add layers **must be placed at the end of each line** containing
 a layer. If, instead, the `+` sign is added in the line before the other layer,
@@ -123,47 +130,24 @@ To learn more about **`ggplot`** after the workshop, you may want to check out t
 
 Building plots with ggplot can be of great help when you engage in exploratory data analysis. It is typically an iterative process, where you go back and forth between your data and their graphical representation, which helps you in the process of getting to know your data better. 
 
-Conveniently, `ggplot` works with pipes. The code below does the same thing as above:
-
-```{r ggplot-with-pipe, eval=FALSE, purl=FALSE, out.width='70%'}
-stops_county %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
-  geom_point() 
-```
-
-We pipe the content of the table into `ggplot()`, so we can omit the first (`data =` argument). Now let's use this to clean up a few odd outliers in our data before we pass them to ggplot.
-
-```{r ggplot-with-filter, results='show', purl=FALSE, out.width='70%'}
-stops_county %>% 
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
-  geom_point() 
-```
-
-Then we can start modifying this plot to extract more information from it. For instance, we can add transparency (`alpha`) to avoid overplotting:
+We can start modifying this plot to extract more information from it. For instance, we can add transparency (`alpha`) to avoid overplotting:
 
 ```{r adding-transparency, results='show', purl=FALSE, out.width='70%'}
-stops_county %>% 
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
+MS_plot + 
   geom_point(alpha = 0.3)
 ```
 
 We can also add a color for all the points:
 
 ```{r adding-color, results='show', purl=FALSE, out.width='70%'}
-stops_county %>% 
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
+MS_plot +  
   geom_point(alpha = 0.3, color= "blue")
 ```
 
 We can add another layer to the plot with `+`: 
 
 ```{r add-abline, results='show', purl=FALSE, out.width='70%'}
-stops_county %>% 
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
+MS_plot + 
   geom_point(alpha = 0.3, color= "blue") +
   geom_abline(intercept = 0)
 ```
@@ -171,9 +155,7 @@ stops_county %>%
 If we wanted to "zoom" into the plot, we could filter to a smaller range of values before passing them to ggplot, but we can also tell ggplot to only plot the x and y values for certain ranges. For this we use `scale_x_continuous` and `scale_y_continuous`. You will receive a message from ggplot telling you how many rows it has removed from the plot.
 
 ```{r zoom-in, results='show', purl=FALSE, out.width='70%'}
-stops_county %>% 
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>% 
-  ggplot(aes(x = pct_black_stopped, y = pct_white_stopped)) + 
+MS_plot + 
   geom_point(alpha = 0.3, color= "blue") +
   geom_abline(intercept = 0) + 
   scale_x_continuous(limits = c(0, 0.1)) +
@@ -193,60 +175,107 @@ stops_county %>%
 ## and show a different range of data. How might you change the size of the dots?
 ```
 
-## Barplot
 
-There are two types of bar charts in ggplot, `geom_bar` and `geom_col`. `geom_bar` makes the height of the bar proportional to the number of cases in each group and counts the number of cases at each x position. 
+Let us now use the `wb_delta` variable (where I have subtracted `pct_black_stopped` from `pct_white_stopped`) to indicate bias for each of the MS counties. We can use a geom called `geom_col`, where heights of the bars represent values in the data, like so: 
 
-If we wanted to see how many violations we have of each type could say:
+```{r bias-colplot, results='show', purl=FALSE, fig.height=7}
+ggplot(stops_county, aes(x = county_name, y = wb_delta)) + 
+  geom_col()
+```
 
-```{r simple-bar, results='show', purl=FALSE, out.width='70%'}
-ggplot(trafficstops, aes(violation)) + 
+This is not very readable, so we will make some changes.
+
+1. We use coord_flip() to switch the x and y axes and be able to read the county names better:
+
+```{r bias-colplot-flip, results='show', purl=FALSE, fig.height=7}
+ggplot(stops_county, aes(x = county_name, y = wb_delta)) +
+  geom_col() + 
+  coord_flip()
+```
+
+2. We order the counties (x axis) by the delta values plotted on the y axis. From lowest (=black bias) to highest value (=white bias).
+
+```{r bias-colplot-reorder, results='show', purl=FALSE, fig.height=7}
+ggplot(stops_county, aes(x = reorder(county_name, -wb_delta), y = wb_delta)) +
+  geom_col() + 
+  coord_flip()
+```
+
+We can still improve this, but will leave it for now.
+
+
+## Univariate distributions
+
+For this section we will use the other dataset provided. 
+
+```{r load-stop-data, eval=FALSE,  purl=FALSE}
+stops <- read.csv('data/MS_stops.csv')
+```
+
+It contains one entry for each traffic stop in Mississippi between 2013 and 2016.
+
+```{r str-stop-data, purl=FALSE}
+str(stops)
+```
+
+For distributions of discrete variables we use `geom_bar`. It makes the height of the bar proportional to the number of cases in each group and counts the number of cases at each x position. 
+If we wanted to see how many traffic violations we have of each type could say:
+
+```{r bar-simple, results='show', purl=FALSE, out.width='70%'}
+ggplot(stops, aes(violation)) + 
   geom_bar()
 ```
 
-As we have seen we could color the bars, but instead of `color` we use `fill`. (What happens when you use `color`?)
+We could color the bars, but instead of `color` we use `fill`. (What happens when you use `color`?)
 
 ```{r color-bar-simple, results='show', purl=FALSE, out.width='70%'}
-ggplot(trafficstops, aes(violation)) + 
+ggplot(stops, aes(violation)) + 
   geom_bar(fill = "green")
 ```
 
 Instead of coloring everything the same we could also color by another category, say gender. For this we have to set the parameter within the `aes()` function, which takes care of mapping the values to different colors:
 
 ```{r color-bar-gender, results='show', purl=FALSE, out.width='70%'}
-ggplot(trafficstops, aes(violation)) + 
+ggplot(stops, aes(violation)) + 
   geom_bar(aes(fill = driver_gender))
 ```
 
 If we wanted to see the proportions within each category we can tell ggplot to stretch the bars between 0 and 1, we can set the position parameter to 'fill':
 
 ```{r color-bar-stretch, results='show', purl=FALSE, out.width='70%'}
-ggplot(trafficstops, aes(violation)) + 
+ggplot(stops, aes(violation)) + 
   geom_bar(aes(fill = driver_gender), position = "fill")
 ```
 
-The other type of barchart, `geom_col`, is used if you want the heights of the bars to represent values in the data. It leaves the data as is.
-For example, we can use `geom_col` for a different way of visualizing the data shown in the scatterplot above. For readability I have also flipped the coordinates:
-
-```{r demograph-barplot, results='show', purl=FALSE, fig.height=7}
-stops_county %>%   
-  filter(pct_white_stopped < 0.5 & pct_black_stopped < 0.5) %>%
-  ggplot(aes(x = county_name, y = pct_white_stopped - pct_black_stopped)) + 
-    geom_col() + 
-    coord_flip()
-```
 
 > <h3>Challenge</h3>
 >
 > Make a barplot that shows for each race the proportion of stops for male and female drivers. How could you get rid of the NAs?
 
+
 ```{r, echo=FALSE, eval=FALSE, purl=TRUE}
 ## Challenge: make a barplot that shows the proportion of stops per race for each gender. How could you get rid of the NAs?
 
-trafficstops %>% 
+stops %>% 
   filter(!is.na(driver_gender) & !is.na(driver_race)) %>% 
   ggplot(aes(driver_race, fill = driver_gender)) +  
      geom_bar(position="fill")
+```
+
+To map a numerical continuous variable we use `geom_histogram`.
+
+> <h3>Challenge</h3>
+>
+> Plot a histogram that shows the distribution of drivers age. 
+> Bonus: Add a vertical line for the mean age of the driver. Hint: there is a geom for this!
+
+```{r, echo=FALSE, eval=FALSE, purl=TRUE}
+## Plot a histogram that shows the distribution of drivers age. 
+## Bonus: Add a vertical line for the mean age of the driver. Hint: there is a geom for this!
+
+ggplot(stops, aes(driver_age)) + 
+  geom_histogram() + 
+  geom_vline(aes(xintercept = mean(driver_age, na.rm = T)))
 ```
 
 
@@ -255,7 +284,7 @@ trafficstops %>%
 For this segment let's extract and work with the stops for Chickasaw County only.
 
 ```{r chickasaw-extract}
-Chickasaw_stops <- filter(trafficstops, county_name == "Chickasaw County")
+Chickasaw_stops <- filter(stops, county_name == "Chickasaw County")
 ```
 
 We can use boxplots to visualize the distribution of driver age within each violation:
@@ -297,21 +326,18 @@ ggplot(data = Chickasaw_stops, aes(x = violation, y = driver_age)) +
     geom_boxplot(alpha = 0)  
 ```
 
+Boxplots are useful summaries, but hide the *shape* of the distribution. For
+example, if there is a bimodal distribution, it would not be observed with a
+boxplot. An alternative to the boxplot is the violin plot (sometimes known as a
+beanplot), where the shape (of the density of points) is drawn.
 
 
 > <h3>Challenge</h3>
 >
-> Boxplots are useful summaries, but hide the *shape* of the distribution. For
-> example, if there is a bimodal distribution, it would not be observed with a
-> boxplot. An alternative to the boxplot is the violin plot (sometimes known as a
-> beanplot), where the shape (of the density of points) is drawn.
+> - Replace the box plot of the last graph with a violin plot.
 >
-> - Replace the box plot with a violin plot; see `geom_violin()`.
->
-> So far, we've looked at the distribution of age within violations  Try making a
-> new plot to explore the distribution of age for another variable:
->
-> - Create the age box plot for `driver_race`. Overlay the boxplot layer on a jitter layer to show actual measurements.
+> - So far, we've looked at the distribution of age within violations  Create a
+> new plot to explore the distribution of age for another categorical variable. 
 >
 
 ```{r boxplot-challenge, eval=FALSE, purl=TRUE, echo=FALSE}
@@ -321,89 +347,118 @@ ggplot(data = Chickasaw_stops, aes(x = violation, y = driver_age)) +
     geom_jitter(alpha = 0.1, color = "tomato") +
     geom_boxplot(alpha = 0)
 
-##  1. Replace the box plot with a violin plot; see `geom_violin()`.
+##  1. Replace the box plot with a violin plot.
 
-##  2. Create the age box plot for `driver_race`. Overlay the boxplot layer on a jitter layer to show actual measurements.
+##  2. Create a new plot to explore the distribution of age for another categorical variable.
 ```
 
 
 ## Plotting time series data
 
-To make things a little easer we first convert the date column we plan to use to Date format.
+To demonstrate time series data we will count the number of violations for each day of the week. First we will create a table `wd_violations`.  
 
-```{r eval=FALSE}
-library(lubridate)
-class(trafficstops$stop_date)
-trafficstops$stop_date <- ymd(trafficstops$stop_date)
-class(trafficstops$stop_date)
+```{r wday-violations, echo=TRUE, results='show'}
+wd_violations <- stops %>% 
+  # group by weekday and violations:
+  group_by(wk_day, violation) %>% 
+  # count occurrences:
+  tally()  
+
+head(wd_violations)
 ```
 
-Let's calculate number of violation per weekday. For better understanding we will label the weekdays. First we need to group the data and count records within each group:
-```{r, purl=FALSE}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
-  group_by(wk_day, violation) %>%
-  tally
-```
-
-Timelapse data can be visualized as a line plot (with -- you guessed it -- `geom_line()`) mapping the days to the x axis and counts to the y axis. So we pipe the output from above into ggplot like this:
+Time series data can be visualized as a line plot (with -- you guessed it! -- `geom_line()`) mapping the days to the x axis and counts to the y axis:
 
 ```{r first-time-series, purl=FALSE}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
-  group_by(wk_day, violation) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n)) +
-     geom_line()
+ggplot(wd_violations, aes(x = wk_day, y = n)) +
+  geom_line()
 ```
 
-Unfortunately, this does not work because we plotted data for all the violations together. So what ggplot displays is the range of all values for each year in a vertial line. We need to tell ggplot to draw a line for each violation by modifying the aesthetic function to include `group = violation`:
+Oops. 
+
+Unfortunately, there are a couple of problems with this plot. 
+
+Firstly, because we plotted data for all the violations together, ggplot displays the **range of all values** for each day in a vertial line. We need to tell ggplot to draw **a line for each violation**. We do this by modifying the aesthetic function to include an instruction to to group by violation: `group = violation`.
 
 ```{r time-series-by-violation, purl=FALSE, out.width='70%'}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
-  group_by(wk_day, violation) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, group = violation)) +
-     geom_line()
+ggplot(wd_violations, aes(x = wk_day, y = n, group = violation)) +
+  geom_line()
 ```
 
-We will be able to distinguish violations in the plot if we add colors. (Colors groups automatically if the variable is numeric).  
+Secondly, the weekdays are out of order. When we read the table with `read.csv` R determined that `wk_day` was a factor and assigned levels in alphabetical order.
+
+```{r time-series-by-violation-inspect, purl=FALSE, results='show'}
+class(stops$wk_day)
+levels(stops$wk_day)
+```
+
+We can reorder the levels, recreate the summary table and plot again.
+
+```{r time-series-by-violation-order, purl=FALSE, out.width='70%'}
+stops$wk_day <- factor(stops$wk_day, 
+                       levels=c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+
+wd_violations <- stops %>% 
+  group_by(wk_day, violation) %>% 
+  tally()  
+
+ggplot(wd_violations, aes(x = wk_day, y = n, group = violation)) +
+  geom_line()
+```
+
+We will be able to distinguish violations in the plot if we add colors. (If the variable is numeric `color` groups automatically.)  
 
 ```{r time-series-with-colors, purl=FALSE, out.width='70%'}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
-  group_by(wk_day, violation) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, group = violation, color = violation)) +
-     geom_line()
+ggplot(wd_violations, aes(x = wk_day, y = n, group = violation, color = violation)) +
+  geom_line()
+```
+
+If you have a lot of data (like for example a [term document matrix](https://en.wikipedia.org/wiki/Document-term_matrix)) you may want to plot your data as a heatmap. There is no specific heatmap plotting function in ggplot2, but combining `geom_tile` with a smooth gradient fill (`scale_fill_gradient`) does the job very well. For our weekday example it would look like this:
+
+
+```{r wdviolations-heatmap, purl=FALSE, out.width='70%'}
+ggplot(wd_violations, aes(x = wk_day, y = violation)) +
+     geom_tile(aes(fill=n)) +
+     scale_fill_gradient(low="grey95", high = "tomato")
+```
+
+The code below show a more extensive example that maps raw violations against day of the year.  
+
+```{r yday-violations-heatmap, purl=FALSE, out.width='70%'}
+stops %>% 
+  group_by(y_day, violation_raw) %>% 
+  tally() %>% 
+  ggplot(aes(y_day, violation_raw)) +
+     geom_tile(aes(fill=n)) +
+     scale_fill_gradient(low="grey95", high = "tomato") +
+     theme_minimal() # (more about this below)
 ```
 
 
 ## Faceting
 
-ggplot has a special technique called *faceting* that allows to split one plot
-into multiple plots based on a factor included in the dataset. We will use it to
-make a time series plot for each violation:
+`ggplot` implements a special technique called *faceting* that allows to split one plot into multiple plots based on a factor included in the dataset. We will use it to make a time series plot for each violation:
 
 ```{r first-facet, purl=FALSE, out.width='70%'}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
-  group_by(wk_day, violation) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, group = violation)) +
+ggplot(wd_violations, aes(x = wk_day, y = n, group = violation)) +
      geom_line() +
      facet_wrap(~ violation)
 ```
 
-Now we would like to split the line in each plot by the race of the driver. To do that we need to make counts in the data frame grouped by `day`, `violation`, and `driver_race`. We then make the faceted plot by splitting further by race using `color` and `group` (within a single plot):
+Now we would like to split the line in each plot by the race of the driver. To do that we need to create a different data frame with the counts grouped not only by `wk_day` and `violation`, but also `driver_race`. 
+
+
+```{r, violation-and-race-data, purl=FALSE}
+wd_viol_race <- stops %>% 
+  group_by(wk_day, violation, driver_race) %>%
+  tally() 
+```
+
+
+We then make the faceted plot by splitting further by race using `color` and `group` (within a single plot):
 
 ```{r, facet-by-violation-and-race, purl=FALSE}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label=TRUE)) %>% 
-  group_by(wk_day, violation, driver_race) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
+ggplot(wd_viol_race, aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
   geom_line() + 
   facet_wrap(~ violation)
 ```
@@ -415,11 +470,15 @@ a placeholder that indicates only one row or column).
 
 > <h3>Challenge</h3>
 > 
-> Use what you just learned to create a plot that depicts how the average age
-> of each driver for the two recorded ethnicities changes through the week.
-> Hint: make sure you remove the records with driver_age under 16.
+> Use what you just learned to create a plot that depicts 
+> the change of the average age of drivers through the week
+> for each driver race.
+> First create a data frame `wd_viol_age`, grouped by weekday, race, and 
+> violation and calculate the mean age per grouop.
+> Hint: Instead of tally use `summarize(avg_age = mean(driver_age))` 
+> to calculate the mean driver age.
+> Now split your plot so we can see one plot for each violation type.
 > How would you go about visualizing both lines and points on the plot? 
-> How would you split your plot into one per each violation type? 
 
 ```{r, eval=FALSE, purl=TRUE, echo=FALSE}
 ### Plotting time series challenge:
@@ -428,7 +487,10 @@ a placeholder that indicates only one row or column).
 ## Use what you just learned to create a plot that depicts 
 ## the change of the average age of drivers through the week
 ## for each driver race.
-## Hint: make sure you remove the records with driver_age under 16.
+## First create a data frame wd_viol_age, grouped by weekday, race, and 
+## violation and calculate the mean age per grouop.
+## Hint: Instead of tally use summarize(avg_age = mean(driver_age)) 
+## to calculate the mean driver age.
 ## Now split your plot so we can see one plot for each violation type.
 ## How would you go about visualizing both lines and points on the plot? 
 
@@ -437,12 +499,11 @@ a placeholder that indicates only one row or column).
 <!--
 ```{r average-age-time-series, purl=FALSE, eval=FALSE, echo=FALSE}
 # Answer
-trafficstops %>%
-  filter(driver_age >= 16) %>% 
-  mutate(wk_day = wday(stop_date, label = TRUE)) %>%  
+wd_viol_age <- stops %>%
   group_by(wk_day, driver_race, violation) %>%
-  summarize(avg_age = mean(driver_age)) %>% 
-  ggplot(aes(x = wk_day, y = avg_age, group = driver_race, color = driver_race)) +
+  summarize(avg_age = mean(driver_age)) 
+   
+ggplot(wd_viol_age, aes(x = wk_day, y = avg_age, group = driver_race, color = driver_race)) +
     geom_line() +
     geom_point() +
     facet_wrap(~ violation)     
@@ -456,11 +517,7 @@ comes with several other themes which can be useful to quickly change the look
 of your visualization, for example `theme_bw()` changes the plot background to white:  
 
 ```{r, facet-theming, purl=FALSE}
-trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label=TRUE, abbr=TRUE)) %>% 
-  group_by(wk_day, violation, driver_race) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
+ggplot(wd_viol_race, aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
   geom_line() + 
   facet_wrap(~ violation) +
   theme_bw()
@@ -472,20 +529,16 @@ at <http://docs.ggplot2.org/current/ggtheme.html>. `theme_minimal()` and `theme_
 
 The [ggthemes](https://cran.r-project.org/web/packages/ggthemes/vignettes/ggthemes.html) package
 provides a wide variety of options (including an Excel 2003 theme).
-The [**`ggplot2`** extensions website](https://www.ggplot2-exts.org) provides a list
+The [**`ggplot2`** extensions website](http://www.ggplot2-exts.org/gallery/) provides a list
 of packages that extend the capabilities of **`ggplot2`**, including additional themes.
 
 
 ## Customization
 
-There are endless possibilities to customize your plot, particularly when you are ready for publication or presentation. Let's look into just a few examples. Before we do that we will assign our plot above to a variable.
+There are endless possibilities to customize details of your plot, particularly when you are ready for publication or presentation. Let's look into just a few examples. Before we do that we will assign our plot above to a variable.
 
 ```{r, assign_plot, purl=FALSE}
-stops_facet_plot <- trafficstops %>% 
-  mutate(wk_day = wday(stop_date, label=TRUE, abbr=TRUE)) %>% 
-  group_by(wk_day, violation, driver_race) %>%
-  tally %>% 
-  ggplot(aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
+stops_facet_plot <- ggplot(wd_viol_race, aes(x = wk_day, y = n, color = driver_race, group = driver_race)) +
   geom_line() + 
   facet_wrap(~ violation)
 ```
@@ -512,7 +565,11 @@ stops_facet_plot +
   theme(text = element_text(size=16))
 ```
 
-After our manipulations, you may notice that the values on the x-axis are still not properly readable. Let's change the orientation of the labels and adjust them vertically and horizontally so they don't overlap. You can use a 90 degree angle, or experiment to find the appropriate angle for diagonally oriented labels:
+That bumps up all the text sizes, so let's manipulate them individually.
+
+For the x-axis we will make the text smaller and adjust the labels vertically and horizontally so they don't overlap. You can use a 90 degree angle, or experiment to find the appropriate angle for diagonally oriented labels. 
+
+For the titles of the subplots we also reduce the size back to 12 pixels. 
 
 ```{r tilted-xlabels, purl=FALSE}
 stops_facet_plot +
@@ -522,39 +579,23 @@ stops_facet_plot +
   theme_bw() + 
   theme(axis.text.x = element_text(colour="grey40", size=12, angle=90, hjust=.5, vjust=.5),
         axis.text.y = element_text(colour="grey40", size=12),
-        strip.text = element_text(size=14),
+        strip.text = element_text(size=12),
         text = element_text(size=16))
 ```
 
-If you like the changes you created better than the default theme, you can save them as an object to be able to easily apply them to other plots you may create:
+If you like the changes you created better than the default theme, you can save them as an object and apply it to other plots you may create:
 
 ```{r save-reapply-theme, purl=FALSE}
-grey_theme <- theme(axis.text.x = element_text(colour="grey40", size=12, angle=90, hjust=.5, vjust=.5),
+my_grey_theme <- theme(axis.text.x = element_text(colour="grey40", size=12, angle=90, hjust=.5, vjust=.5),
                    axis.text.y = element_text(colour="grey40", size=12), text=element_text(size=16))
 
 ggplot(data = Chickasaw_stops, aes(x = violation, y = driver_age)) +
   geom_boxplot() + 
-  grey_theme
-
+  my_grey_theme
 ```
 
 
 Note that it is also possible to change the fonts of your plots. If you are on Windows, you may have to install the [**extrafont** package](https://github.com/wch/extrafont), and follow the instructions included in the README for this package.
-
-
-> <h3>Challenge</h3>
-> 
-> With all of this information in hand, please take another five minutes to either
-> improve one of the plots generated in this exercise or create a beautiful graph
-> of your own. Use the RStudio [**`ggplot2`** cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf) for
-> inspiration.
-
-> Here are some ideas:
-
-> * See if you can change the thickness of the lines.
-> * Can you find a way to change the name of the legend? What about its labels?
-> * Try using a different color palette (see http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/).
-
 
 After creating your plot, you can save it out to a file in your prefered format. You can change the dimension (and resolution) of your plot by adjusting the appropriate arguments (`width`, `height` and `dpi`):
 
@@ -573,4 +614,15 @@ ggsave("name_of_file.png", my_plot, width=15, height=10)
 ```
 
 Note: The parameters `width` and `height` also determine the font size in the saved plot.
+
+
+> <h3>Challenge</h3>
+> 
+> Improve one of the plots you generated  or create a beautiful graph
+> of your own and save it to your desktop. Use the RStudio [**`ggplot2`** cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf) for inspiration.
+>
+> Here are some ideas:
+> * See if you can change the thickness of the lines.
+> * Can you find a way to change the name of the legend? What about its labels?
+> * Try using a different color palette (see http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/).
 

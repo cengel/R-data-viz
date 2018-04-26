@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{Last updated: April 20, 2018}
+  \date{Last updated: April 26, 2018}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -196,7 +196,7 @@ To get the most out of this workshop you should have:
   \item
     If you have your working directory set to \texttt{R-data-viz} which
     contains a folder called \texttt{data} you can copy, paste, and run
-    the following two lines in R:
+    the following lines in R:
   \end{itemize}
 \end{itemize}
 
@@ -220,6 +220,10 @@ To get the most out of this workshop you should have:
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
+Chang, W. (2012): R Graphics Cookbook.
+\href{https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford\&xmlId=9781449363086}{Stanford
+only online access}
+
 Murrell, P. (2012): R Graphics, 2nd ed.
 \href{https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford\&xmlId=9781439831779}{Stanford
 only online access}
@@ -237,11 +241,6 @@ Part of the materials for this tutorial are adapted from
 \url{http://datacarpentry.org} and \url{http://softwarecarpentry.org}.
 
 Data sample taken from \url{https://openpolicing.stanford.edu/}
-
-\begin{verbatim}
-## Warning in scan(file = file, what = what, sep = sep, quote = quote, dec =
-## dec, : EOF within quoted string
-\end{verbatim}
 
 \chapter{\texorpdfstring{Data Visualization with
 \texttt{ggplot2}}{Data Visualization with ggplot2}}\label{data-visualization-with-ggplot2}
@@ -261,10 +260,10 @@ Learning Objectives
   Add a graphical representation of the data in the plot (points, lines,
   bars) adding ``geoms'' layers
 \item
-  Produce univariate plots, barplots, boxplots, and line plots using
-  ggplot.
+  Produce univariate plots, barplots and histograms, area plots,
+  boxplots, and line plots, using ggplot.
 \item
-  Produce bivariate plots, like scatter plots, hex plots, stacked bar,
+  Produce bivariate plots, like scatter plots, hex plots, stacked bars,
   and bivariate line charts using ggplot.
 \item
   Modify the aesthetics for the entire plot as well as for individual
@@ -284,12 +283,65 @@ Learning Objectives
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-We start by loading the required packages. \textbf{\texttt{ggplot2}} is
-included in the \textbf{\texttt{tidyverse}} package.
+\section{\texorpdfstring{What is
+\textbf{\texttt{ggplot2}}}{What is ggplot2}}\label{what-is-ggplot2}
+
+There are three main plotting systems in R, the
+\href{https://www.statmethods.net/graphs/index.html}{base plotting}
+system, the
+\href{https://www.statmethods.net/advgraphs/trellis.html}{lattice}
+package, and the
+\href{https://www.statmethods.net/advgraphs/ggplot2.html}{ggplot2}
+package.
+
+Here we will introduce the \texttt{ggplot2} package, which has recently
+soared in popularity. \texttt{ggplot} allows you to create graphs for
+univariate and multivariate numerical and categorical data in a
+straightforward manner. It also allows for easy grouping and
+conditioning. It can generate complex plots create high quality graphics
+for publication.
+
+\texttt{ggplot} is built on
+\href{https://stanford.idm.oclc.org/login?url=http://www.myilibrary.com?id=46066}{Leland
+Wilkinson's The Grammar of Graphics}, the idea that any plot can be
+expressed from the same set of components:
+
+\begin{itemize}
+\tightlist
+\item
+  a data set,
+\item
+  a coordinate system,
+\item
+  and a set of geoms--the visual representation of data points.
+\end{itemize}
+
+The key to understanding \texttt{ggplot} is thinking about a figure in
+layers. This idea may be familiar to you if you have used image editing
+programs like Photoshop, Illustrator, or Inkscape.
+
+\textbf{\texttt{ggplot2}} provides a programmatic interface for
+specifying what variables to plot, how they are displayed, and what the
+general visual properties are, so we only need minimal changes if the
+underlying data change or if we decide to change from a bar plot to a
+scatterplot. This helps in creating plots quickly with minimal amounts
+of adjustments and tweaking.
+
+\texttt{ggplot} generally likes data in the `long' format: i.e., a
+column for every dimension, and a row for every observation. Well
+structured data will save you lots of time when making figures with
+ggplot.
+
+\section{\texorpdfstring{Plotting with
+\textbf{\texttt{ggplot2}}}{Plotting with ggplot2}}\label{plotting-with-ggplot2}
+
+We start by loading the required package. Note that
+\textbf{\texttt{ggplot2}} is part of the collection of the
+\href{https://www.tidyverse.org}{\textbf{\texttt{tidyverse}} packages}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -302,7 +354,8 @@ Next we load the data into R:
 \end{Shaded}
 
 These data are a small subset extracted from the
-openpolicing.stanford.edu dataset and contain aggregated for each county
+\href{https://openpolicing.stanford.edu}{openpolicing.stanford.edu}
+dataset and contain traffic stops by police aggregated for each county
 in Missisippi. Let's take a look at the data.
 
 \begin{Shaded}
@@ -312,25 +365,17 @@ in Missisippi. Let's take a look at the data.
 \end{Highlighting}
 \end{Shaded}
 
-\section{\texorpdfstring{Plotting with
-\textbf{\texttt{ggplot2}}}{Plotting with ggplot2}}\label{plotting-with-ggplot2}
+The table contains two variables which represent for each county, and
+for both white and black, the ratio of drivers stopped out of the total
+population over 18: \texttt{pct\_black\_stopped} and
+\texttt{pct\_white\_stopped}. In order to see if there is any `bias' we
+can plot the two values against each other and see if they line up at a
+45 degree angle.
 
-\textbf{\texttt{ggplot2}} is a plotting package that makes it simple to
-create complex plots from data in a data frame. It provides a more
-programmatic interface for specifying what variables to plot, how they
-are displayed, and general visual properties, so we only need minimal
-changes if the underlying data change or if we decide to change from a
-bar plot to a scatterplot. This helps in creating publication quality
-plots with minimal amounts of adjustments and tweaking.
+\texttt{ggplot} graphics are built step by step by adding new elements
+(layers) using the \texttt{+} sign.
 
-ggplot generally likes data in the `long' format: i.e., a column for
-every dimension, and a row for every observation. Well structured data
-will save you lots of time when making figures with ggplot.
-
-ggplot graphics are built step by step by adding new elements using the
-\texttt{+} sign.
-
-To build a ggplot we need to:
+To build a \texttt{ggplot} we need to:
 
 \begin{itemize}
 \tightlist
@@ -392,6 +437,8 @@ generated with code like this:
 \end{Highlighting}
 \end{Shaded}
 
+\includegraphics{R-data-viz_files/figure-latex/first-ggplot-with-plus-1.pdf}
+
 Notes:
 
 \begin{itemize}
@@ -402,9 +449,9 @@ Notes:
   settings). This includes the x and y axis you set up in
   \texttt{aes()}.
 \item
-  Any parameters you set in the \texttt{geom\_*()} function are treated
-  independently of (and override) the settings defined globally in the
-  \texttt{ggplot()} function.
+  Any parameters you set in a \texttt{geom\_*()} function are treated
+  independently of (and possibly override) the settings defined globally
+  in the \texttt{ggplot()} function.
 \item
   Geoms are plotted in the order they are added after each \texttt{+},
   that means geoms last added will display on top of prior geoms.
@@ -441,41 +488,13 @@ you go back and forth between your data and their graphical
 representation, which helps you in the process of getting to know your
 data better.
 
-Conveniently, \texttt{ggplot} works with pipes. The code below does the
-same thing as above:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
-\end{Highlighting}
-\end{Shaded}
-
-We pipe the content of the table into \texttt{ggplot()}, so we can omit
-the first (\texttt{data\ =} argument). Now let's use this to clean up a
-few odd outliers in our data before we pass them to ggplot.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/ggplot-with-filter-1}
-
-Then we can start modifying this plot to extract more information from
-it. For instance, we can add transparency (\texttt{alpha}) to avoid
+We can start modifying this plot to extract more information from it.
+For instance, we can add transparency (\texttt{alpha}) to avoid
 overplotting:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
+\NormalTok{MS_plot }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -486,9 +505,7 @@ We can also add a color for all the points:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
+\NormalTok{MS_plot }\OperatorTok{+}\StringTok{  }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -499,9 +516,7 @@ We can add another layer to the plot with \texttt{+}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
+\NormalTok{MS_plot }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{intercept =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
@@ -518,9 +533,7 @@ removed from the plot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}\StringTok{ }
+\NormalTok{MS_plot }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\DataTypeTok{color=} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{intercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.1}\NormalTok{)) }\OperatorTok{+}
@@ -529,7 +542,7 @@ removed from the plot.
 \end{Shaded}
 
 \begin{verbatim}
-#> Warning: Removed 40 rows containing missing values (geom_point).
+#> Warning: Removed 44 rows containing missing values (geom_point).
 \end{verbatim}
 
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/zoom-in-1}
@@ -542,30 +555,101 @@ abline, and show a different range of data. How might you change the
 size of the dots?
 \end{quote}
 
-\section{Barplot}\label{barplot}
-
-There are two types of bar charts in ggplot, \texttt{geom\_bar} and
-\texttt{geom\_col}. \texttt{geom\_bar} makes the height of the bar
-proportional to the number of cases in each group and counts the number
-of cases at each x position.
-
-If we wanted to see how many violations we have of each type could say:
+Let us now use the \texttt{wb\_delta} variable (where I have subtracted
+\texttt{pct\_black\_stopped} from \texttt{pct\_white\_stopped}) to
+indicate bias for each of the MS counties. We can use a geom called
+\texttt{geom\_col}, where heights of the bars represent values in the
+data, like so:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(trafficstops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{ggplot}\NormalTok{(stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ county_name, }\DataTypeTok{y =}\NormalTok{ wb_delta)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_col}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/bias-colplot-1.pdf}
+
+This is not very readable, so we will make some changes.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  We use coord\_flip() to switch the x and y axes and be able to read
+  the county names better:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ county_name, }\DataTypeTok{y =}\NormalTok{ wb_delta)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_col}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/bias-colplot-flip-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  We order the counties (x axis) by the delta values plotted on the y
+  axis. From lowest (=black bias) to highest value (=white bias).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{reorder}\NormalTok{(county_name, }\OperatorTok{-}\NormalTok{wb_delta), }\DataTypeTok{y =}\NormalTok{ wb_delta)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_col}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/bias-colplot-reorder-1.pdf}
+
+We can still improve this, but will leave it for now.
+
+\section{Univariate distributions}\label{univariate-distributions}
+
+For this section we will use the other dataset provided.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stops <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'data/MS_stops.csv'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+It contains one entry for each traffic stop in Mississippi between 2013
+and 2016.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(stops)}
+\end{Highlighting}
+\end{Shaded}
+
+For distributions of discrete variables we use \texttt{geom\_bar}. It
+makes the height of the bar proportional to the number of cases in each
+group and counts the number of cases at each x position. If we wanted to
+see how many traffic violations we have of each type could say:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(stops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_bar}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/simple-bar-1}
+\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/bar-simple-1}
 
-As we have seen we could color the bars, but instead of \texttt{color}
-we use \texttt{fill}. (What happens when you use \texttt{color}?)
+We could color the bars, but instead of \texttt{color} we use
+\texttt{fill}. (What happens when you use \texttt{color}?)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(trafficstops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{ggplot}\NormalTok{(stops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{fill =} \StringTok{"green"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -579,7 +663,7 @@ different colors:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(trafficstops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{ggplot}\NormalTok{(stops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ driver_gender))}
 \end{Highlighting}
 \end{Shaded}
@@ -592,36 +676,28 @@ parameter to `fill':
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(trafficstops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{ggplot}\NormalTok{(stops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ driver_gender), }\DataTypeTok{position =} \StringTok{"fill"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/color-bar-stretch-1}
 
-The other type of barchart, \texttt{geom\_col}, is used if you want the
-heights of the bars to represent values in the data. It leaves the data
-as is. For example, we can use \texttt{geom\_col} for a different way of
-visualizing the data shown in the scatterplot above. For readability I
-have also flipped the coordinates:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{stops_county }\OperatorTok{%>%}\StringTok{   }
-\StringTok{  }\KeywordTok{filter}\NormalTok{(pct_white_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5} \OperatorTok{&}\StringTok{ }\NormalTok{pct_black_stopped }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ county_name, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped }\OperatorTok{-}\StringTok{ }\NormalTok{pct_black_stopped)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_col}\NormalTok{() }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{coord_flip}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/demograph-barplot-1.pdf}
-
 \begin{quote}
 Challenge
 
 Make a barplot that shows for each race the proportion of stops for male
 and female drivers. How could you get rid of the NAs?
+\end{quote}
+
+To map a numerical continuous variable we use \texttt{geom\_histogram}.
+
+\begin{quote}
+Challenge
+
+Plot a histogram that shows the distribution of drivers age. Bonus: Add
+a vertical line for the mean age of the driver. Hint: there is a geom
+for this!
 \end{quote}
 
 \section{Boxplot}\label{boxplot}
@@ -631,7 +707,7 @@ County only.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Chickasaw_stops <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(trafficstops, county_name }\OperatorTok{==}\StringTok{ "Chickasaw County"}\NormalTok{)}
+\NormalTok{Chickasaw_stops <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(stops, county_name }\OperatorTok{==}\StringTok{ "Chickasaw County"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -699,159 +775,217 @@ not cover the points:
 
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/boxplot-with-jitter-clean-1}
 
-\begin{quote}
-Challenge
-
 Boxplots are useful summaries, but hide the \emph{shape} of the
 distribution. For example, if there is a bimodal distribution, it would
 not be observed with a boxplot. An alternative to the boxplot is the
 violin plot (sometimes known as a beanplot), where the shape (of the
 density of points) is drawn.
 
-\begin{itemize}
-\tightlist
-\item
-  Replace the box plot with a violin plot; see \texttt{geom\_violin()}.
-\end{itemize}
-
-So far, we've looked at the distribution of age within violations Try
-making a new plot to explore the distribution of age for another
-variable:
+\begin{quote}
+Challenge
 
 \begin{itemize}
-\tightlist
 \item
-  Create the age box plot for \texttt{driver\_race}. Overlay the boxplot
-  layer on a jitter layer to show actual measurements.
+  Replace the box plot of the last graph with a violin plot.
+\item
+  So far, we've looked at the distribution of age within violations
+  Create a new plot to explore the distribution of age for another
+  categorical variable.
 \end{itemize}
 \end{quote}
 
 \section{Plotting time series data}\label{plotting-time-series-data}
 
-To make things a little easer we first convert the date column we plan
-to use to Date format.
+To demonstrate time series data we will count the number of violations
+for each day of the week. First we will create a table
+\texttt{wd\_violations}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(lubridate)}
-\KeywordTok{class}\NormalTok{(trafficstops}\OperatorTok{$}\NormalTok{stop_date)}
-\NormalTok{trafficstops}\OperatorTok{$}\NormalTok{stop_date <-}\StringTok{ }\KeywordTok{ymd}\NormalTok{(trafficstops}\OperatorTok{$}\NormalTok{stop_date)}
-\KeywordTok{class}\NormalTok{(trafficstops}\OperatorTok{$}\NormalTok{stop_date)}
+\NormalTok{wd_violations <-}\StringTok{ }\NormalTok{stops }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# group by weekday and violations:}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# count occurrences:}
+\StringTok{  }\KeywordTok{tally}\NormalTok{()  }
+
+\KeywordTok{head}\NormalTok{(wd_violations)}
 \end{Highlighting}
 \end{Shaded}
 
-Let's calculate number of violation per weekday. For better
-understanding we will label the weekdays. First we need to group the
-data and count records within each group:
+\begin{verbatim}
+#> # A tibble: 6 x 3
+#> # Groups:   wk_day [1]
+#>   wk_day violation                    n
+#>   <fct>  <fct>                    <int>
+#> 1 Fri    Breaks-Lights-etc          564
+#> 2 Fri    Careless driving          1150
+#> 3 Fri    License-Permit-Insurance  6603
+#> 4 Fri    Other or unknown          2603
+#> 5 Fri    Seat belt                 3948
+#> 6 Fri    Speeding                 20767
+\end{verbatim}
+
+Time series data can be visualized as a line plot (with -- you guessed
+it! -- \texttt{geom\_line()}) mapping the days to the x axis and counts
+to the y axis:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{  }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally}
-\end{Highlighting}
-\end{Shaded}
-
-Timelapse data can be visualized as a line plot (with -- you guessed it
--- \texttt{geom\_line()}) mapping the days to the x axis and counts to
-the y axis. So we pipe the output from above into ggplot like this:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{  }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n)) }\OperatorTok{+}
-\StringTok{     }\KeywordTok{geom_line}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{R-data-viz_files/figure-latex/first-time-series-1.pdf}
 
-Unfortunately, this does not work because we plotted data for all the
-violations together. So what ggplot displays is the range of all values
-for each year in a vertial line. We need to tell ggplot to draw a line
-for each violation by modifying the aesthetic function to include
-\texttt{group\ =\ violation}:
+Oops.
+
+Unfortunately, there are a couple of problems with this plot.
+
+Firstly, because we plotted data for all the violations together, ggplot
+displays the \textbf{range of all values} for each day in a vertial
+line. We need to tell ggplot to draw \textbf{a line for each violation}.
+We do this by modifying the aesthetic function to include an instruction
+to to group by violation: \texttt{group\ =\ violation}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{  }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation)) }\OperatorTok{+}
-\StringTok{     }\KeywordTok{geom_line}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/time-series-by-violation-1}
 
-We will be able to distinguish violations in the plot if we add colors.
-(Colors groups automatically if the variable is numeric).
+Secondly, the weekdays are out of order. When we read the table with
+\texttt{read.csv} R determined that \texttt{wk\_day} was a factor and
+assigned levels in alphabetical order.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{  }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation, }\DataTypeTok{color =}\NormalTok{ violation)) }\OperatorTok{+}
-\StringTok{     }\KeywordTok{geom_line}\NormalTok{()}
+\KeywordTok{class}\NormalTok{(stops}\OperatorTok{$}\NormalTok{wk_day)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> [1] "factor"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{levels}\NormalTok{(stops}\OperatorTok{$}\NormalTok{wk_day)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> [1] "Fri" "Mon" "Sat" "Sun" "Thu" "Tue" "Wed"
+\end{verbatim}
+
+We can reorder the levels, recreate the summary table and plot again.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stops}\OperatorTok{$}\NormalTok{wk_day <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(stops}\OperatorTok{$}\NormalTok{wk_day, }
+                       \DataTypeTok{levels=}\KeywordTok{c}\NormalTok{(}\StringTok{"Mon"}\NormalTok{, }\StringTok{"Tue"}\NormalTok{, }\StringTok{"Wed"}\NormalTok{, }\StringTok{"Thu"}\NormalTok{, }\StringTok{"Fri"}\NormalTok{, }\StringTok{"Sat"}\NormalTok{, }\StringTok{"Sun"}\NormalTok{))}
+
+\NormalTok{wd_violations <-}\StringTok{ }\NormalTok{stops }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{tally}\NormalTok{()  }
+
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/time-series-by-violation-order-1}
+
+We will be able to distinguish violations in the plot if we add colors.
+(If the variable is numeric \texttt{color} groups automatically.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation, }\DataTypeTok{color =}\NormalTok{ violation)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/time-series-with-colors-1}
 
-\section{Faceting}\label{faceting}
-
-ggplot has a special technique called \emph{faceting} that allows to
-split one plot into multiple plots based on a factor included in the
-dataset. We will use it to make a time series plot for each violation:
+If you have a lot of data (like for example a
+\href{https://en.wikipedia.org/wiki/Document-term_matrix}{term document
+matrix}) you may want to plot your data as a heatmap. There is no
+specific heatmap plotting function in ggplot2, but combining
+\texttt{geom\_tile} with a smooth gradient fill
+(\texttt{scale\_fill\_gradient}) does the job very well. For our weekday
+example it would look like this:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{  }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation)) }\OperatorTok{+}
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ violation)) }\OperatorTok{+}
+\StringTok{     }\KeywordTok{geom_tile}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill=}\NormalTok{n)) }\OperatorTok{+}
+\StringTok{     }\KeywordTok{scale_fill_gradient}\NormalTok{(}\DataTypeTok{low=}\StringTok{"grey95"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"tomato"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/wdviolations-heatmap-1}
+
+The code below show a more extensive example that maps raw violations
+against day of the year.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stops }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(y_day, violation_raw) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{tally}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(y_day, violation_raw)) }\OperatorTok{+}
+\StringTok{     }\KeywordTok{geom_tile}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill=}\NormalTok{n)) }\OperatorTok{+}
+\StringTok{     }\KeywordTok{scale_fill_gradient}\NormalTok{(}\DataTypeTok{low=}\StringTok{"grey95"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"tomato"}\NormalTok{) }\OperatorTok{+}
+\StringTok{     }\KeywordTok{theme_minimal}\NormalTok{() }\CommentTok{# (more about this below)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/yday-violations-heatmap-1}
+
+\section{Faceting}\label{faceting}
+
+\texttt{ggplot} implements a special technique called \emph{faceting}
+that allows to split one plot into multiple plots based on a factor
+included in the dataset. We will use it to make a time series plot for
+each violation:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(wd_violations, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{group =}\NormalTok{ violation)) }\OperatorTok{+}
 \StringTok{     }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{     }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{violation)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
-
 \includegraphics[width=0.7\linewidth]{R-data-viz_files/figure-latex/first-facet-1}
 
 Now we would like to split the line in each plot by the race of the
-driver. To do that we need to make counts in the data frame grouped by
-\texttt{day}, \texttt{violation}, and \texttt{driver\_race}. We then
-make the faceted plot by splitting further by race using \texttt{color}
-and \texttt{group} (within a single plot):
+driver. To do that we need to create a different data frame with the
+counts grouped not only by \texttt{wk\_day} and \texttt{violation}, but
+also \texttt{driver\_race}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label=}\OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{wd_viol_race <-}\StringTok{ }\NormalTok{stops }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation, driver_race) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{tally}\NormalTok{() }
+\end{Highlighting}
+\end{Shaded}
+
+We then make the faceted plot by splitting further by race using
+\texttt{color} and \texttt{group} (within a single plot):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(wd_viol_race, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{violation)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
 
 \includegraphics{R-data-viz_files/figure-latex/facet-by-violation-and-race-1.pdf}
 
@@ -864,11 +998,14 @@ a placeholder that indicates only one row or column).
 \begin{quote}
 Challenge
 
-Use what you just learned to create a plot that depicts how the average
-age of each driver for the two recorded ethnicities changes through the
-week. Hint: make sure you remove the records with driver\_age under 16.
-How would you go about visualizing both lines and points on the plot?
-How would you split your plot into one per each violation type?
+Use what you just learned to create a plot that depicts the change of
+the average age of drivers through the week for each driver race. First
+create a data frame \texttt{wd\_viol\_age}, grouped by weekday, race,
+and violation and calculate the mean age per grouop. Hint: Instead of
+tally use \texttt{summarize(avg\_age\ =\ mean(driver\_age))} to
+calculate the mean driver age. Now split your plot so we can see one
+plot for each violation type. How would you go about visualizing both
+lines and points on the plot?
 \end{quote}
 
 \section{\texorpdfstring{\textbf{\texttt{ggplot2}}
@@ -880,21 +1017,12 @@ useful to quickly change the look of your visualization, for example
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr=}\OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation, driver_race) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
+\KeywordTok{ggplot}\NormalTok{(wd_viol_race, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{violation) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
 
 \includegraphics{R-data-viz_files/figure-latex/facet-theming-1.pdf}
 
@@ -908,24 +1036,20 @@ The
 \href{https://cran.r-project.org/web/packages/ggthemes/vignettes/ggthemes.html}{ggthemes}
 package provides a wide variety of options (including an Excel 2003
 theme). The
-\href{https://www.ggplot2-exts.org}{\textbf{\texttt{ggplot2}} extensions
-website} provides a list of packages that extend the capabilities of
-\textbf{\texttt{ggplot2}}, including additional themes.
+\href{http://www.ggplot2-exts.org/gallery/}{\textbf{\texttt{ggplot2}}
+extensions website} provides a list of packages that extend the
+capabilities of \textbf{\texttt{ggplot2}}, including additional themes.
 
 \section{Customization}\label{customization}
 
-There are endless possibilities to customize your plot, particularly
-when you are ready for publication or presentation. Let's look into just
-a few examples. Before we do that we will assign our plot above to a
-variable.
+There are endless possibilities to customize details of your plot,
+particularly when you are ready for publication or presentation. Let's
+look into just a few examples. Before we do that we will assign our plot
+above to a variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stops_facet_plot <-}\StringTok{ }\NormalTok{trafficstops }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{wk_day =} \KeywordTok{wday}\NormalTok{(stop_date, }\DataTypeTok{label=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{abbr=}\OtherTok{TRUE}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(wk_day, violation, driver_race) }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{tally }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
+\NormalTok{stops_facet_plot <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(wd_viol_race, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ wk_day, }\DataTypeTok{y =}\NormalTok{ n, }\DataTypeTok{color =}\NormalTok{ driver_race, }\DataTypeTok{group =}\NormalTok{ driver_race)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{violation)}
 \end{Highlighting}
@@ -944,11 +1068,6 @@ Now, let's change names of axes to something more informative than
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
-
 \includegraphics{R-data-viz_files/figure-latex/improved-labels-1.pdf}
 
 The axes have more informative names, but their readability can be
@@ -965,18 +1084,17 @@ improved by increasing the font size:
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
-
 \includegraphics{R-data-viz_files/figure-latex/improved-font-size-1.pdf}
 
-After our manipulations, you may notice that the values on the x-axis
-are still not properly readable. Let's change the orientation of the
-labels and adjust them vertically and horizontally so they don't
-overlap. You can use a 90 degree angle, or experiment to find the
-appropriate angle for diagonally oriented labels:
+That bumps up all the text sizes, so let's manipulate them individually.
+
+For the x-axis we will make the text smaller and adjust the labels
+vertically and horizontally so they don't overlap. You can use a 90
+degree angle, or experiment to find the appropriate angle for diagonally
+oriented labels.
+
+For the titles of the subplots we also reduce the size back to 12
+pixels.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -987,30 +1105,24 @@ appropriate angle for diagonally oriented labels:
 \StringTok{  }\KeywordTok{theme_bw}\NormalTok{() }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey40"}\NormalTok{, }\DataTypeTok{size=}\DecValTok{12}\NormalTok{, }\DataTypeTok{angle=}\DecValTok{90}\NormalTok{, }\DataTypeTok{hjust=}\NormalTok{.}\DecValTok{5}\NormalTok{, }\DataTypeTok{vjust=}\NormalTok{.}\DecValTok{5}\NormalTok{),}
         \DataTypeTok{axis.text.y =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey40"}\NormalTok{, }\DataTypeTok{size=}\DecValTok{12}\NormalTok{),}
-        \DataTypeTok{strip.text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{14}\NormalTok{),}
+        \DataTypeTok{strip.text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{12}\NormalTok{),}
         \DataTypeTok{text =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{16}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> geom_path: Each group consists of only one observation. Do you need to
-#> adjust the group aesthetic?
-\end{verbatim}
-
 \includegraphics{R-data-viz_files/figure-latex/tilted-xlabels-1.pdf}
 
 If you like the changes you created better than the default theme, you
-can save them as an object to be able to easily apply them to other
-plots you may create:
+can save them as an object and apply it to other plots you may create:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{grey_theme <-}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey40"}\NormalTok{, }\DataTypeTok{size=}\DecValTok{12}\NormalTok{, }\DataTypeTok{angle=}\DecValTok{90}\NormalTok{, }\DataTypeTok{hjust=}\NormalTok{.}\DecValTok{5}\NormalTok{, }\DataTypeTok{vjust=}\NormalTok{.}\DecValTok{5}\NormalTok{),}
+\NormalTok{my_grey_theme <-}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey40"}\NormalTok{, }\DataTypeTok{size=}\DecValTok{12}\NormalTok{, }\DataTypeTok{angle=}\DecValTok{90}\NormalTok{, }\DataTypeTok{hjust=}\NormalTok{.}\DecValTok{5}\NormalTok{, }\DataTypeTok{vjust=}\NormalTok{.}\DecValTok{5}\NormalTok{),}
                    \DataTypeTok{axis.text.y =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"grey40"}\NormalTok{, }\DataTypeTok{size=}\DecValTok{12}\NormalTok{), }\DataTypeTok{text=}\KeywordTok{element_text}\NormalTok{(}\DataTypeTok{size=}\DecValTok{16}\NormalTok{))}
 
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ Chickasaw_stops, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ violation, }\DataTypeTok{y =}\NormalTok{ driver_age)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\NormalTok{grey_theme}
+\StringTok{  }\NormalTok{my_grey_theme}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1020,34 +1132,6 @@ Note that it is also possible to change the fonts of your plots. If you
 are on Windows, you may have to install the
 \href{https://github.com/wch/extrafont}{\textbf{extrafont} package}, and
 follow the instructions included in the README for this package.
-
-\begin{quote}
-Challenge
-
-With all of this information in hand, please take another five minutes
-to either improve one of the plots generated in this exercise or create
-a beautiful graph of your own. Use the RStudio
-\href{https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf}{\textbf{\texttt{ggplot2}}
-cheat sheet} for inspiration.
-\end{quote}
-
-\begin{quote}
-Here are some ideas:
-\end{quote}
-
-\begin{quote}
-\begin{itemize}
-\tightlist
-\item
-  See if you can change the thickness of the lines.
-\item
-  Can you find a way to change the name of the legend? What about its
-  labels?
-\item
-  Try using a different color palette (see
-  \url{http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/}).
-\end{itemize}
-\end{quote}
 
 After creating your plot, you can save it out to a file in your prefered
 format. You can change the dimension (and resolution) of your plot by
@@ -1072,6 +1156,20 @@ adjusting the appropriate arguments (\texttt{width}, \texttt{height} and
 
 Note: The parameters \texttt{width} and \texttt{height} also determine
 the font size in the saved plot.
+
+\begin{quote}
+Challenge
+
+Improve one of the plots you generated or create a beautiful graph of
+your own and save it to your desktop. Use the RStudio
+\href{https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf}{\textbf{\texttt{ggplot2}}
+cheat sheet} for inspiration.
+
+Here are some ideas: * See if you can change the thickness of the lines.
+* Can you find a way to change the name of the legend? What about its
+labels? * Try using a different color palette (see
+\url{http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/}).
+\end{quote}
 
 \chapter{\texorpdfstring{Alternatives: R base graphis and
 \texttt{lattice}
