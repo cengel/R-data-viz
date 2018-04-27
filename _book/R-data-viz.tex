@@ -1171,295 +1171,6 @@ labels? * Try using a different color palette (see
 \url{http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/}).
 \end{quote}
 
-\chapter{\texorpdfstring{Alternatives: R base graphis and
-\texttt{lattice}
-graphs}{Alternatives: R base graphis and lattice graphs}}\label{baseplot}
-
-\begin{quote}
-Learning Objectives
-
-\begin{itemize}
-\tightlist
-\item
-  Make a plot with base plot package
-\item
-  Make a plot with other base plot commands
-\item
-  Make a simple plot with R lattice package
-\item
-  Explain the difference to the ggplot approach and evaluate pros and
-  cons
-\end{itemize}
-\end{quote}
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\section{R base graphics}\label{r-base-graphics}
-
-We will use a simple dataset that comes with the base R install.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(cars)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-#>   speed dist
-#> 1     4    2
-#> 2     4   10
-#> 3     7    4
-#> 4     7   22
-#> 5     8   16
-#> 6     9   10
-\end{verbatim}
-
-R base comes with a simple plot command that can be applied to the data
-like that:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(cars)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/plot-cars-1.pdf}
-
-Other things one can do with plot.
-
-Walk through \texttt{plot} arguments and options.
-
-How to do multiple plots.
-
-\url{https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.pdf} and
-code:
-\url{https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter1.html}
-
-\begin{quote}
-Challenge: make a plot
-\end{quote}
-
-\begin{quote}
-Challenge: how would you do this with ggplot?
-\end{quote}
-
-Other base package plot commands: \texttt{histogram}, \texttt{boxplot},
-\texttt{stripchart}, \texttt{barplot}, \texttt{mosaicplot},
-\texttt{dotchart} and more.
-
-\url{http://www.cyclismo.org/tutorial/R/plotting.html} and
-\url{http://www.cyclismo.org/tutorial/R/intermediatePlotting.html}
-
-\url{https://www.harding.edu/fmccown/r/}
-
-\url{http://courses.atlas.illinois.edu/spring2017/STAT/STAT200/RProgramming/Plotting.html}
-
-\begin{quote}
-Challenge: use some of these commands
-\end{quote}
-
-\section{\texorpdfstring{\texttt{lattice}
-package}{lattice package}}\label{lattice-package}
-
-Lattice is another major graphic package in R. {[}\ldots{} more about it
-here\ldots{}{]} It works like this:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{xyplot}\NormalTok{(dist }\OperatorTok{~}\StringTok{ }\NormalTok{speed, cars)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/lattice-cars-1.pdf}
-
-Iris data example (again, other data??) :
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(iris)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1          5.1         3.5          1.4         0.2  setosa
-#> 2          4.9         3.0          1.4         0.2  setosa
-#> 3          4.7         3.2          1.3         0.2  setosa
-#> 4          4.6         3.1          1.5         0.2  setosa
-#> 5          5.0         3.6          1.4         0.2  setosa
-#> 6          5.4         3.9          1.7         0.4  setosa
-\end{verbatim}
-
-Contains 50 samples from 3 species with 4 measurements: length and width
-of petals and length and width of sepals.
-
-\begin{figure}
-\includegraphics[width=0.3\linewidth]{img/iris_petal_sepal} \caption{Iris Petal and Sepal (Source: kaggle.com)}\label{fig:iris-photo}
-\end{figure}
-
-With \texttt{lattice}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{xyplot}\NormalTok{(Petal.Length}\OperatorTok{~}\NormalTok{Petal.Width, }\DataTypeTok{data =}\NormalTok{ iris, }\DataTypeTok{groups=}\NormalTok{Species, }
-  \DataTypeTok{panel =}\NormalTok{ panel.superpose, }\DataTypeTok{type =} \KeywordTok{c}\NormalTok{(}\StringTok{"p"}\NormalTok{, }\StringTok{"smooth"}\NormalTok{), }\DataTypeTok{span=}\NormalTok{.}\DecValTok{75}\NormalTok{,}
-  \DataTypeTok{col.line =} \KeywordTok{trellis.par.get}\NormalTok{(}\StringTok{"strip.background"}\NormalTok{)}\OperatorTok{$}\NormalTok{col,}
-  \DataTypeTok{col.symbol =} \KeywordTok{trellis.par.get}\NormalTok{(}\StringTok{"strip.shingle"}\NormalTok{)}\OperatorTok{$}\NormalTok{col,}
-  \DataTypeTok{key =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Iris Data"}\NormalTok{, }\DataTypeTok{x=}\NormalTok{.}\DecValTok{15}\NormalTok{, }\DataTypeTok{y=}\NormalTok{.}\DecValTok{85}\NormalTok{, }\DataTypeTok{corner=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{border=}\OtherTok{TRUE}\NormalTok{,}
-        \DataTypeTok{points =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{col=}\KeywordTok{trellis.par.get}\NormalTok{(}\StringTok{"strip.shingle"}\NormalTok{)}\OperatorTok{$}\NormalTok{col[}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{],}
-                 \DataTypeTok{pch =} \KeywordTok{trellis.par.get}\NormalTok{(}\StringTok{"superpose.symbol"}\NormalTok{)}\OperatorTok{$}\NormalTok{pch[}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{],}
-                 \DataTypeTok{cex =} \KeywordTok{trellis.par.get}\NormalTok{(}\StringTok{"superpose.symbol"}\NormalTok{)}\OperatorTok{$}\NormalTok{cex[}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{]),}
-                 \DataTypeTok{text =} \KeywordTok{list}\NormalTok{(}\KeywordTok{levels}\NormalTok{(iris}\OperatorTok{$}\NormalTok{Species))))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/lattice-iris-1.pdf}
-
-The same with ggplot:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{iris, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Petal.Width, }\DataTypeTok{y=}\NormalTok{Petal.Length, }\DataTypeTok{color=}\NormalTok{Species)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{stat_smooth}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{jitter}\NormalTok{(Petal.Width), }\KeywordTok{jitter}\NormalTok{(Petal.Length)), }\DataTypeTok{size=}\NormalTok{.}\DecValTok{2}\NormalTok{, }\DataTypeTok{se=}\NormalTok{F) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_classic}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/ggplot-iris-1.pdf}
-
-pros - cons?
-
-More about \texttt{lattice}:
-
-\url{https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter4.pdf} R
-code:
-\url{https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter4.html}
-
-\chapter{Domain specific graphs}\label{domains}
-
-\begin{quote}
-Learning Objectives
-
-\begin{itemize}
-\tightlist
-\item
-  Be aware of specialized graph packages and know where to look for them
-\item
-  Understand the basic structure of iheatmapr, tmap, and visNetwork
-  examples
-\item
-  Modify parameters of provided graph examples
-\end{itemize}
-\end{quote}
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\texttt{ggplot} can get you a long way, but if you need to do a
-particular, more complex graph it is worth checking if there might be an
-R package for that. Typically it would do one type of visualization and
-do that really well. Below are a few examples.
-
-\section{\texorpdfstring{Heatmaps (e.g.
-\textbf{\texttt{iheatmapr}})}{Heatmaps (e.g. iheatmapr)}}\label{heatmaps-e.g.-iheatmapr}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(iheatmapr)}
-\KeywordTok{data}\NormalTok{(measles, }\DataTypeTok{package =} \StringTok{"iheatmapr"}\NormalTok{)}
-
-\KeywordTok{main_heatmap}\NormalTok{(measles, }\DataTypeTok{name =} \StringTok{"Measles<br>Cases"}\NormalTok{, }\DataTypeTok{x_categorical =} \OtherTok{FALSE}\NormalTok{,}
-             \DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{))) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{add_col_groups}\NormalTok{(}\KeywordTok{ifelse}\NormalTok{(}\DecValTok{1930}\OperatorTok{:}\DecValTok{2001} \OperatorTok{<}\StringTok{ }\DecValTok{1961}\NormalTok{,}\StringTok{"No"}\NormalTok{,}\StringTok{"Yes"}\NormalTok{),}
-                  \DataTypeTok{side =} \StringTok{"bottom"}\NormalTok{, }\DataTypeTok{name =} \StringTok{"Vaccine<br>Introduced?"}\NormalTok{,}
-                  \DataTypeTok{title =} \StringTok{"Vaccine?"}\NormalTok{,}
-                  \DataTypeTok{colors =} \KeywordTok{c}\NormalTok{(}\StringTok{"lightgray"}\NormalTok{,}\StringTok{"blue"}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{add_col_labels}\NormalTok{(}\DataTypeTok{ticktext =} \KeywordTok{seq}\NormalTok{(}\DecValTok{1930}\NormalTok{,}\DecValTok{2000}\NormalTok{,}\DecValTok{10}\NormalTok{),}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{add_row_labels}\NormalTok{(}\DataTypeTok{size =} \FloatTok{0.3}\NormalTok{,}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{6}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{add_col_summary}\NormalTok{(}\DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Average<br>across<br>states"}\NormalTok{),}
-                  \DataTypeTok{yname =} \StringTok{"summary"}\NormalTok{)  }\OperatorTok{%>%}\StringTok{                 }
-\StringTok{  }\KeywordTok{add_col_title}\NormalTok{(}\StringTok{"Measles Cases from 1930 to 2001"}\NormalTok{, }\DataTypeTok{side=} \StringTok{"top"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{add_row_summary}\NormalTok{(}\DataTypeTok{groups =} \OtherTok{TRUE}\NormalTok{, }
-                  \DataTypeTok{type =} \StringTok{"bar"}\NormalTok{,}
-                  \DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Average<br>per<br>year"}\NormalTok{,}
-                                \DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{)))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/heatmap-demo-1.pdf}
-
-\section{\texorpdfstring{Networks (e.g.
-\textbf{\texttt{visNetwork}})}{Networks (e.g. visNetwork)}}\label{networks-e.g.-visnetwork}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(}\StringTok{'visNetwork'}\NormalTok{) }
-\NormalTok{nodes <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-NODES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
-\NormalTok{links <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{shape <-}\StringTok{ "dot"}  
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{shadow <-}\StringTok{ }\OtherTok{TRUE} \CommentTok{# Nodes will drop shadow}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{title <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{media }\CommentTok{# Text on click}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{label <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{type.label }\CommentTok{# Node label}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{size <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{audience.size }\CommentTok{# Node size}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{borderWidth <-}\StringTok{ }\DecValTok{2} \CommentTok{# Node border width}
-
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.background <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"slategrey"}\NormalTok{, }\StringTok{"tomato"}\NormalTok{, }\StringTok{"gold"}\NormalTok{)[nodes}\OperatorTok{$}\NormalTok{media.type]}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.border <-}\StringTok{ "black"}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.highlight.background <-}\StringTok{ "orange"}
-\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.highlight.border <-}\StringTok{ "darkred"}
-
-\KeywordTok{visNetwork}\NormalTok{(nodes, links) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{visOptions}\NormalTok{(}\DataTypeTok{highlightNearest =} \OtherTok{TRUE}\NormalTok{, }
-             \DataTypeTok{selectedBy =} \StringTok{"type.label"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{R-data-viz_files/figure-latex/network-demo-1.pdf}
-
-\section{\texorpdfstring{Maps (e.g.
-\textbf{\texttt{tmap}})}{Maps (e.g. tmap)}}\label{maps-e.g.-tmap}
-
-For this demo we first need to download the data. If you have your
-working directory set to \texttt{R-data-viz} and it contains a folder
-called \texttt{data}, this will download and extract the map data into a
-subfolder of your \texttt{data} folder, called \texttt{map}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/map.zip"}\NormalTok{,}
-              \StringTok{"data/map.zip"}\NormalTok{)}
-\KeywordTok{unzip}\NormalTok{(}\StringTok{"data/map.zip"}\NormalTok{, }\DataTypeTok{exdir=}\StringTok{"data"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-Now, here is the map.
-\includegraphics{R-data-viz_files/figure-latex/tmap-demo-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tmap)}
-\KeywordTok{library}\NormalTok{(tmaptools)}
-\KeywordTok{suppressPackageStartupMessages}\NormalTok{(}\KeywordTok{library}\NormalTok{(sf))}
-              
-\NormalTok{london <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"London"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{crime_densities <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Crimes"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{thames <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Thames"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
-
-\KeywordTok{tm_shape}\NormalTok{(crime_densities) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{tm_fill}\NormalTok{(}\DataTypeTok{col =} \StringTok{"level"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"YlOrRd"}\NormalTok{, }
-    \DataTypeTok{title =} \KeywordTok{expression}\NormalTok{(}\StringTok{"Crimes per "} \OperatorTok{*}\StringTok{ }\NormalTok{km}\OperatorTok{^}\DecValTok{2}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
-\KeywordTok{tm_shape}\NormalTok{(london) }\OperatorTok{+}\StringTok{ }\KeywordTok{tm_borders}\NormalTok{() }\OperatorTok{+}
-\KeywordTok{tm_shape}\NormalTok{(thames) }\OperatorTok{+}\StringTok{ }\KeywordTok{tm_lines}\NormalTok{(}\DataTypeTok{col =} \StringTok{"steelblue"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
-\KeywordTok{tm_compass}\NormalTok{(}\DataTypeTok{position =} \KeywordTok{c}\NormalTok{(}\StringTok{"left"}\NormalTok{, }\StringTok{"bottom"}\NormalTok{)) }\OperatorTok{+}
-\KeywordTok{tm_scale_bar}\NormalTok{(}\DataTypeTok{position =} \KeywordTok{c}\NormalTok{(}\StringTok{"left"}\NormalTok{, }\StringTok{"bottom"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
-\KeywordTok{tm_style_gray}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Crimes in Greater London}\CharTok{\textbackslash{}n}\StringTok{October 2015"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-Good starting places to look for additional examples are the R Graph
-Gallery: \url{https://www.r-graph-gallery.com/all-graphs/} and the CRAN
-Task View: \url{https://CRAN.R-project.org/view=Graphics}.
-
 \chapter{Interactive graphs}\label{interactive-graphs}
 
 \begin{quote}
@@ -1532,6 +1243,175 @@ Using the \texttt{plot\_ly} function:
 
 For a more comprehensive example see:
 \url{https://cengel.shinyapps.io/RioSlaveMarket/}
+
+\chapter{Domain specific graphs}\label{domains}
+
+\begin{quote}
+Learning Objectives
+
+\begin{itemize}
+\tightlist
+\item
+  Be aware of specialized graph packages and know where to look for them
+\item
+  Understand the basic structure of iheatmapr, tmap, and visNetwork
+  examples
+\item
+  Modify parameters of provided graph examples
+\end{itemize}
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\texttt{ggplot} can get you a long way, but if you need to do a
+particular, more complex graph it is worth checking if there might be an
+R package for that. Typically it would do one type of visualization and
+do that really well. Below are a few examples.
+
+\section{\texorpdfstring{Heatmaps (e.g.
+\textbf{\texttt{iheatmapr}})}{Heatmaps (e.g. iheatmapr)}}\label{heatmaps-e.g.-iheatmapr}
+
+The
+\href{https://CRAN.R-project.org/package=iheatmapr}{\textbf{\texttt{iheatmapr}}
+package} specializes in creating interactive heatmaps, that range from
+standard heatmaps to relatively complex ones, that can be built up
+iteratively. It uses the \href{https://plot.ly/}{plotly} for
+interactivity.
+
+The example below is taken from
+\url{https://ropensci.github.io/iheatmapr/index.html}.
+
+The data mapped are from a matrix that contains the yearly number of
+measles cases from 1930-2001 for US states.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(iheatmapr)}
+\KeywordTok{data}\NormalTok{(measles, }\DataTypeTok{package =} \StringTok{"iheatmapr"}\NormalTok{)}
+
+\KeywordTok{main_heatmap}\NormalTok{(measles, }\DataTypeTok{name =} \StringTok{"Measles<br>Cases"}\NormalTok{, }\DataTypeTok{x_categorical =} \OtherTok{FALSE}\NormalTok{,}
+             \DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{))) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_col_groups}\NormalTok{(}\KeywordTok{ifelse}\NormalTok{(}\DecValTok{1930}\OperatorTok{:}\DecValTok{2001} \OperatorTok{<}\StringTok{ }\DecValTok{1961}\NormalTok{,}\StringTok{"No"}\NormalTok{,}\StringTok{"Yes"}\NormalTok{),}
+                  \DataTypeTok{side =} \StringTok{"bottom"}\NormalTok{, }\DataTypeTok{name =} \StringTok{"Vaccine<br>Introduced?"}\NormalTok{,}
+                  \DataTypeTok{title =} \StringTok{"Vaccine?"}\NormalTok{,}
+                  \DataTypeTok{colors =} \KeywordTok{c}\NormalTok{(}\StringTok{"lightgray"}\NormalTok{,}\StringTok{"blue"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_col_labels}\NormalTok{(}\DataTypeTok{ticktext =} \KeywordTok{seq}\NormalTok{(}\DecValTok{1930}\NormalTok{,}\DecValTok{2000}\NormalTok{,}\DecValTok{10}\NormalTok{),}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_row_labels}\NormalTok{(}\DataTypeTok{size =} \FloatTok{0.3}\NormalTok{,}\DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{6}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{add_col_summary}\NormalTok{(}\DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Average<br>across<br>states"}\NormalTok{),}
+                  \DataTypeTok{yname =} \StringTok{"summary"}\NormalTok{)  }\OperatorTok{%>%}\StringTok{                 }
+\StringTok{  }\KeywordTok{add_col_title}\NormalTok{(}\StringTok{"Measles Cases from 1930 to 2001"}\NormalTok{, }\DataTypeTok{side=} \StringTok{"top"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_row_summary}\NormalTok{(}\DataTypeTok{groups =} \OtherTok{TRUE}\NormalTok{, }
+                  \DataTypeTok{type =} \StringTok{"bar"}\NormalTok{,}
+                  \DataTypeTok{layout =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Average<br>per<br>year"}\NormalTok{,}
+                                \DataTypeTok{font =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{size =} \DecValTok{8}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/heatmap-demo-1.pdf}
+
+Note that \texttt{iheatmapr} has a
+\href{https://bioconductor.org}{Bioconductor} dependency, so if you have
+never installed a package from Bioconductor before you will need to
+install BiocInstaller first:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"https://bioconductor.org/biocLite.R"}\NormalTok{)}
+\KeywordTok{biocLite}\NormalTok{(}\StringTok{"BiocInstaller"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{\texorpdfstring{Networks (e.g.
+\textbf{\texttt{visNetwork}})}{Networks (e.g. visNetwork)}}\label{networks-e.g.-visnetwork}
+
+\href{https://CRAN.R-project.org/package=visNetwork}{\textbf{\texttt{visNetwork}}}
+is an R interface to the \href{http://visjs.org/}{`vis.js' JavaScript
+library}, a package to visualize networks in an interactive fashion. It
+takes a table of nodes (vertices) and a table of edges (links) as
+inputs. The example below is taken from
+\href{http://kateto.net/network-visualization}{Katherine Ognyanova's
+tutorial} and represents a network of hyperlinks and mentions among
+various news sources.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\StringTok{'visNetwork'}\NormalTok{) }
+\NormalTok{nodes <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-NODES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
+\NormalTok{links <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/network/Dataset1-Media-Example-EDGES.csv"}\NormalTok{, }\DataTypeTok{header=}\NormalTok{T, }\DataTypeTok{as.is=}\NormalTok{T)}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{shape <-}\StringTok{ "dot"}  
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{shadow <-}\StringTok{ }\OtherTok{TRUE} \CommentTok{# Nodes will drop shadow}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{title <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{media }\CommentTok{# Text on click}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{label <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{type.label }\CommentTok{# Node label}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{size <-}\StringTok{ }\NormalTok{nodes}\OperatorTok{$}\NormalTok{audience.size }\CommentTok{# Node size}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{borderWidth <-}\StringTok{ }\DecValTok{2} \CommentTok{# Node border width}
+
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.background <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"slategrey"}\NormalTok{, }\StringTok{"tomato"}\NormalTok{, }\StringTok{"gold"}\NormalTok{)[nodes}\OperatorTok{$}\NormalTok{media.type]}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.border <-}\StringTok{ "black"}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.highlight.background <-}\StringTok{ "orange"}
+\NormalTok{nodes}\OperatorTok{$}\NormalTok{color.highlight.border <-}\StringTok{ "darkred"}
+
+\KeywordTok{visNetwork}\NormalTok{(nodes, links) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{visOptions}\NormalTok{(}\DataTypeTok{highlightNearest =} \OtherTok{TRUE}\NormalTok{, }
+             \DataTypeTok{selectedBy =} \StringTok{"type.label"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/network-demo-1.pdf}
+
+\section{\texorpdfstring{Maps (e.g.
+\textbf{\texttt{tmap}})}{Maps (e.g. tmap)}}\label{maps-e.g.-tmap}
+
+The
+\href{https://CRAN.R-project.org/package=tmap}{\textbf{\texttt{tmap}}
+package} is designed to visualize spatial data distributions in
+geographic space, so called ``thematic maps''. The example is adapted
+from
+\href{https://github.com/mtennekes/tmap/tree/master/demo/LondonCrimes}{mtennekes}
+and shows a map of crimes registered during October 2015. We combine
+several layers, one with the outline of London, one with the river
+Thames, and one with the actual crime densities.
+
+For this demo we first need to download the data. If you have your
+working directory set to \texttt{R-data-viz} and it contains a folder
+called \texttt{data}, this will download and extract the map data into a
+subfolder of your \texttt{data} folder, called \texttt{map}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://github.com/cengel/R-data-viz/raw/master/demo-data/map.zip"}\NormalTok{,}
+              \StringTok{"data/map.zip"}\NormalTok{)}
+\KeywordTok{unzip}\NormalTok{(}\StringTok{"data/map.zip"}\NormalTok{, }\DataTypeTok{exdir=}\StringTok{"data"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now, here is the map.
+
+\includegraphics{R-data-viz_files/figure-latex/tmap-demo-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tmap)}
+\KeywordTok{library}\NormalTok{(tmaptools)}
+\KeywordTok{suppressPackageStartupMessages}\NormalTok{(}\KeywordTok{library}\NormalTok{(sf))}
+              
+\NormalTok{london <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"London"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{crime_densities <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Crimes"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{thames <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"data/map"}\NormalTok{, }\StringTok{"Thames"}\NormalTok{, }\DataTypeTok{quiet =} \OtherTok{TRUE}\NormalTok{)}
+
+\KeywordTok{tm_shape}\NormalTok{(crime_densities) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{tm_fill}\NormalTok{(}\DataTypeTok{col =} \StringTok{"level"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"YlOrRd"}\NormalTok{, }
+    \DataTypeTok{title =} \KeywordTok{expression}\NormalTok{(}\StringTok{"Crimes per "} \OperatorTok{*}\StringTok{ }\NormalTok{km}\OperatorTok{^}\DecValTok{2}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{tm_shape}\NormalTok{(london) }\OperatorTok{+}\StringTok{ }\KeywordTok{tm_borders}\NormalTok{() }\OperatorTok{+}
+\KeywordTok{tm_shape}\NormalTok{(thames) }\OperatorTok{+}\StringTok{ }\KeywordTok{tm_lines}\NormalTok{(}\DataTypeTok{col =} \StringTok{"steelblue"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
+\KeywordTok{tm_compass}\NormalTok{(}\DataTypeTok{position =} \KeywordTok{c}\NormalTok{(}\StringTok{"left"}\NormalTok{, }\StringTok{"bottom"}\NormalTok{)) }\OperatorTok{+}
+\KeywordTok{tm_scale_bar}\NormalTok{(}\DataTypeTok{position =} \KeywordTok{c}\NormalTok{(}\StringTok{"left"}\NormalTok{, }\StringTok{"bottom"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\KeywordTok{tm_style_gray}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Crimes in Greater London}\CharTok{\textbackslash{}n}\StringTok{October 2015"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Good starting places to look for additional examples and packages are
+the R Graph Gallery: \url{https://www.r-graph-gallery.com/all-graphs/}
+and the CRAN Task View: \url{https://CRAN.R-project.org/view=Graphics}.
 
 \bibliography{book.bib,packages.bib}
 

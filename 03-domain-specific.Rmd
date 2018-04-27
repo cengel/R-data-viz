@@ -16,6 +16,12 @@ knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
 
 ## Heatmaps (e.g. **`iheatmapr`**)
 
+The [**`iheatmapr`** package](https://CRAN.R-project.org/package=iheatmapr) specializes in creating interactive heatmaps, that range from standard heatmaps to relatively complex ones, that can be built up iteratively. It uses the [plotly](https://plot.ly/) for interactivity.
+
+The example below is taken from https://ropensci.github.io/iheatmapr/index.html.
+
+The data mapped are from a matrix that contains the yearly number of measles cases from 1930-2001 for US states.
+
 ```{r heatmap-demo, results='show'}
 library(iheatmapr)
 data(measles, package = "iheatmapr")
@@ -37,9 +43,17 @@ main_heatmap(measles, name = "Measles<br>Cases", x_categorical = FALSE,
                                 font = list(size = 8)))
 ```
 
+Note that `iheatmapr` has a [Bioconductor](https://bioconductor.org) dependency, so if you have never installed a package from Bioconductor before you will need to install BiocInstaller first:
+
+```{r bioconductor, eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("BiocInstaller")
+```
 
 
 ## Networks (e.g. **`visNetwork`**)
+
+[**`visNetwork`**](https://CRAN.R-project.org/package=visNetwork ) is an R interface to the ['vis.js' JavaScript library](http://visjs.org/), a package to visualize networks in an interactive fashion. It takes a table of nodes (vertices) and a table of edges (links) as inputs. The example below is taken from [Katherine Ognyanova's tutorial](http://kateto.net/network-visualization) and represents a network of hyperlinks and mentions among various news sources.
 
 ```{r network-demo, results='show'}
 library('visNetwork') 
@@ -65,6 +79,8 @@ visNetwork(nodes, links) %>%
 
 ## Maps (e.g. **`tmap`**) 
 
+The [**`tmap`** package](https://CRAN.R-project.org/package=tmap) is designed to visualize spatial data distributions in geographic space, so called "thematic maps". The example is adapted from [mtennekes](https://github.com/mtennekes/tmap/tree/master/demo/LondonCrimes) and shows a map of crimes registered during October 2015. We combine several layers, one with the outline of London, one with the river Thames, and one with the actual crime densities.
+
 For this demo we first need to download the data. If you have your working directory set to `R-data-viz` and it contains a folder called `data`, this will download and extract the map data into a subfolder of your `data` folder, called `map`:
 
 ```{r tmap-download, eval=FALSE}
@@ -74,6 +90,7 @@ unzip("data/map.zip", exdir="data")
 ```
 
 Now, here is the map.
+
 ```{r tmap-demo, echo=FALSE}
 library(tmap)
 library(tmaptools)
@@ -113,4 +130,4 @@ tm_style_gray(title = "Crimes in Greater London\nOctober 2015")
 ```
 
 
-Good starting places to look for additional examples are the R Graph Gallery: https://www.r-graph-gallery.com/all-graphs/ and the CRAN Task View: https://CRAN.R-project.org/view=Graphics. 
+Good starting places to look for additional examples and packages are the R Graph Gallery: https://www.r-graph-gallery.com/all-graphs/ and the CRAN Task View: https://CRAN.R-project.org/view=Graphics. 
