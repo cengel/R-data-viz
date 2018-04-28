@@ -3,7 +3,7 @@ knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
 library(tidyverse)
 stops_county <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_county.csv')
 #stops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')
-stops <- read.csv("data/MS_stops.csv")
+stops <- read.csv('data/MS_stops.csv')
 ```
 
 # Data Visualization with `ggplot2`{#ggplot}
@@ -284,6 +284,7 @@ ggplot(stops, aes(driver_age)) +
 For this segment let's extract and work with the stops for Chickasaw County only.
 
 ```{r chickasaw-extract}
+library(dplyr)
 Chickasaw_stops <- filter(stops, county_name == "Chickasaw County")
 ```
 

@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{Last updated: April 26, 2018}
+  \date{Last updated: April 27, 2018}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -707,6 +707,7 @@ County only.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(dplyr)}
 \NormalTok{Chickasaw_stops <-}\StringTok{ }\KeywordTok{filter}\NormalTok{(stops, county_name }\OperatorTok{==}\StringTok{ "Chickasaw County"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1179,70 +1180,293 @@ Learning Objectives
 \begin{itemize}
 \tightlist
 \item
-  Be aware of R interactive graphing capabilities
+  Be aware of R interactive graphing capabilities and options
 \item
-  Understand the basic structure of a shiny app
+  Know some graphing packages that are based on htmlwidgets
+\item
+  Create a simple interactive plot
+\item
+  Understand the basic structure of a \texttt{shiny} app
 \end{itemize}
 \end{quote}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\section{plotly}\label{plotly}
+\section{\texorpdfstring{\textbf{\texttt{htmlwidgets}}}{htmlwidgets}}\label{htmlwidgets}
+
+JavaScript is probably the most widely used scripting languages to
+create interactive webpages (html). The
+\href{(https://CRAN.R-project.org/package=htmlwidgets)}{\texttt{htmlwidgets}
+package} provides a framework to bind R commands to various existing,
+interactive JavaScript libraries, including those that greate data
+graphs. The interactive components (``widgets'') created using the
+framework can be:
+
+\begin{itemize}
+\tightlist
+\item
+  used at the R console for data analysis just like conventional R plots
+  (via RStudio Viewer).
+\item
+  seamlessly embedded within R Markdown documents and Shiny web
+  applications.
+\item
+  saved as standalone web pages for ad-hoc sharing via email, Dropbox,
+  etc.
+\end{itemize}
+
+While you can certainly develop yor own widget, there are a number of
+widgets already available, that you can install and that make creating
+interacive visualizations much easier. In fact, the packages used for
+the examples in section \ref{domain} are all based on htmlwidgets.
+
+For a complete list check out the
+\href{http://gallery.htmlwidgets.org}{htmlwidgets gallery}.
+
+The \texttt{htmlwidgets} framework ensures that the graphics are
+rendered locally. By default they either run in your web browser or in
+the R Studio viewer. If you use \href{https://rmarkdown.rstudio.com/}{R
+Markdown}, the html pages rendered contain the full JavaScript code, so
+you can also also deploy them to a standard webserver (like github
+pages).
+
+\section{\texorpdfstring{\textbf{\texttt{plotly}}}{plotly}}\label{plotly}
+
+We will start with a widget called \texttt{plotly}. \texttt{plotly}
+binds R commands to the \href{https://plot.ly/javascript/}{JavaScript
+plotly.js graphing library}. The R package allows you to easily
+translate \texttt{ggplot2} graphics to an interactive web-based version.
+
+First we install and load the package.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{install.packages}\NormalTok{(plotly) }\CommentTok{# if you haven't installed the package}
 \KeywordTok{library}\NormalTok{(plotly)}
 \end{Highlighting}
 \end{Shaded}
 
-Using the \texttt{ggplotly} function:
+Let us go back to our initial scatterplot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(cars, }\KeywordTok{aes}\NormalTok{(speed, dist)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
-\KeywordTok{ggplotly}\NormalTok{(p)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{R-data-viz_files/figure-latex/ggplotly-cars-1.pdf}
-
-(dev. version of ggplot2 now has a \texttt{ggplotly()} function)
-
-Using the \texttt{plot\_ly} function:
+To turn this into an interactive graph with \texttt{plotly}, we create a
+ggplot object by assigning it to a variable:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(plotly)}
-\KeywordTok{plot_ly}\NormalTok{(cars, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{speed, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{dist, }\DataTypeTok{type =} \StringTok{"scatter"}\NormalTok{, }\DataTypeTok{mode =} \StringTok{"markers"}\NormalTok{)}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ stops_county, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ pct_black_stopped, }\DataTypeTok{y =}\NormalTok{ pct_white_stopped)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{R-data-viz_files/figure-latex/plotly-cars-1.pdf}
+We can then pass that object to the \texttt{ggplotly} function (the dev.
+version of ggplot2 has a \texttt{ggplotly()} function, but this works):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplotly}\NormalTok{(p) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{R-data-viz_files/figure-latex/ggplotly-scatter-1.pdf}
+
+This is really all that is to it.
+
+ALternatively, it is possible to forgo ggplot and using the
+\texttt{plot\_ly} function to create your graph from scratch. For our
+example that would be:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot_ly}\NormalTok{(stops_county, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{pct_black_stopped, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{pct_white_stopped)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> No trace type specified:
+#>   Based on info supplied, a 'scatter' trace seems appropriate.
+#>   Read more about this trace type -> https://plot.ly/r/reference/#scatter
+\end{verbatim}
+
+\begin{verbatim}
+#> No scatter mode specifed:
+#>   Setting the mode to markers
+#>   Read more about this attribute -> https://plot.ly/r/reference/#scatter-mode
+\end{verbatim}
+
+\includegraphics{R-data-viz_files/figure-latex/plotly-scatter-1.pdf}
+
+\begin{quote}
+Challenge
+
+Go back to the box plot we created earlier using the Chickasaw\_stops:
+\texttt{ggplot(Chickasaw\_stops,\ aes(x\ =\ violation,\ y\ =\ driver\_age))\ +}
+\texttt{geom\_boxplot()} Create an interactive version of it, using both
+approaches, \texttt{ggplotly} and \texttt{plot\_ly}.
+\end{quote}
+
+The full documentation of all the arguments \texttt{plot\_ly} can take
+is here: \url{https://plot.ly/r/reference/}
 
 \section{shiny}\label{shiny}
 
-\url{https://cengel.shinyapps.io/shiny_demo/}
+\texttt{htmlwidgets} are very powerful, but if you require more
+customization and flexibility, particularly with regard to user input,
+you may want to look into
+\href{https://CRAN.R-project.org/package=shiny}{\texttt{shiny}}. Because
+it executes acutal R code, which web browsers cannot execute,
+\texttt{shiny} requires its own server.
+
+There are verious ways in which a shiny application can be run. We will
+use an example run it from the
+
+R Commandline.
+
+Rmarkdown: To call Shiny code from an R Markdown document, add runtime:
+shiny to the header shiny server: either run your own, or host it at
+ShinyApps.io
+
+Building shiny apps deserves its own workshop, so here - to give you a
+teaser - I have provided only a very simple example. We will re-use our
+barchart from earlier where we plotted the proportional amount of
+traffic violations for each gender:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(stops, }\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ driver_gender), }\DataTypeTok{position =} \StringTok{"fill"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We want to create a plot where we can choose which county we'd like to
+display this bar chart for.
+
+I have prepared the code for this, which you can run like this:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Install and load the \texttt{shiny} package
+  (\texttt{install.packages(shiny)}).
+\item
+  In your \texttt{R-data-viz} folder create a new folder called
+  \texttt{shinyapps}.
+\item
+  Download \texttt{app.R} into that folder:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{download.file}\NormalTok{(}\StringTok{"https://raw.githubusercontent.com/cengel/R-data-viz/master/shinyapp/app.R"}\NormalTok{, }\StringTok{"shinyapp/app.R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  In your R console:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(shiny)}
+\KeywordTok{runApp}\NormalTok{(}\StringTok{"./shinyapp/"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Let us now go over the code in the \texttt{app.R} script.
+
+We define two functions and call them \texttt{ui} (for user interface,
+which we present to the user and receive input) and \texttt{server}
+(where the input is used and the magic happens).
+
+This is what happens in the \texttt{ui} function:
+
+Using some of the layout functions shiny comes with we define a panel
+with a sidebar, where the input is received the main panel, where the
+plot is going to be displahyed. We also assign the plot a name
+(\texttt{violationsPlot}) that we will reuse later. Lastly we add some
+text to help users understand what this graph about.
+
+A very important function is \texttt{selectInput}, where we define the
+choices that the user has (the county names in the table) and also
+define the name of the variable that will hold the input from the user:
+\texttt{county}.
+
+The \texttt{server} is where input and output are processed. In this
+example we really only render the plot. You see that the name for our
+plot (\texttt{violationsPlot}) appears attached to the \texttt{output}
+variable. You can also detect our ggplot code from earlier, with the
+only difference that we use the input county value
+\texttt{input\$county} to filter the data frame before we send them to
+ggplot to plot.
+
+The very last line of the script binds the two together as a shiny app.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(shiny)}
 \KeywordTok{library}\NormalTok{(ggplot2)}
-\KeywordTok{inputPanel}\NormalTok{(}
-    \KeywordTok{sliderInput}\NormalTok{(}\StringTok{"speed_range"}\NormalTok{, }
-        \DataTypeTok{label =} \StringTok{"Range of Speed:"}\NormalTok{,}
-        \DataTypeTok{min =} \KeywordTok{min}\NormalTok{(cars}\OperatorTok{$}\NormalTok{speed), }
-        \DataTypeTok{max =} \KeywordTok{max}\NormalTok{(cars}\OperatorTok{$}\NormalTok{speed), }
-        \DataTypeTok{value =} \KeywordTok{range}\NormalTok{(cars}\OperatorTok{$}\NormalTok{speed)))}
+\KeywordTok{library}\NormalTok{(dplyr)}
 
-\KeywordTok{renderPlot}\NormalTok{(\{}
-\NormalTok{    cars_sel <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(cars, speed }\OperatorTok{>=}\StringTok{ }\NormalTok{input}\OperatorTok{$}\NormalTok{speed_range[}\DecValTok{1}\NormalTok{] }\OperatorTok{&}\StringTok{ }
-\StringTok{                           }\NormalTok{speed }\OperatorTok{<}\StringTok{ }\NormalTok{input}\OperatorTok{$}\NormalTok{speed_range[}\DecValTok{2}\NormalTok{])}
-    \KeywordTok{ggplot}\NormalTok{(cars_sel, }\KeywordTok{aes}\NormalTok{(speed, dist)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()\})}
+\CommentTok{# uncomment this if you need to reload the stops table}
+\CommentTok{# stops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')}
+
+\NormalTok{## UI}
+\CommentTok{# Use a fluid Bootstrap layout}
+\NormalTok{ui <-}\StringTok{ }\KeywordTok{fluidPage}\NormalTok{(    }
+  
+  \CommentTok{# Give the page a title}
+  \KeywordTok{titlePanel}\NormalTok{(}\StringTok{"Missisippi Violations by County"}\NormalTok{),}
+  
+  \CommentTok{# Generate a row with a sidebar}
+  \KeywordTok{sidebarLayout}\NormalTok{(      }
+    
+    \CommentTok{# Define the sidebar with one input}
+    \KeywordTok{sidebarPanel}\NormalTok{(}
+      \KeywordTok{selectInput}\NormalTok{(}\StringTok{"county"}\NormalTok{, }\StringTok{"County:"}\NormalTok{, }
+                  \DataTypeTok{choices=}\KeywordTok{unique}\NormalTok{(stops}\OperatorTok{$}\NormalTok{county_name)),}
+      \KeywordTok{hr}\NormalTok{(),}
+      \KeywordTok{helpText}\NormalTok{(}\StringTok{"Data from Stanford Openpolicing Project."}\NormalTok{)}
+\NormalTok{    ),}
+    
+    \CommentTok{# Create a spot for the barplot}
+    \KeywordTok{mainPanel}\NormalTok{(}
+      \KeywordTok{plotOutput}\NormalTok{(}\StringTok{"violationsPlot"}\NormalTok{)  }
+\NormalTok{    )}
+    
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{## Server}
+
+\CommentTok{# Define a server for the Shiny app}
+\NormalTok{server <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(input, output) \{}
+  
+  \CommentTok{# Fill in the spot we created for a plot}
+\NormalTok{  output}\OperatorTok{$}\NormalTok{violationsPlot <-}\StringTok{ }\KeywordTok{renderPlot}\NormalTok{(\{}
+    
+\NormalTok{    stops }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{filter}\NormalTok{(county_name }\OperatorTok{==}\StringTok{ }\NormalTok{input}\OperatorTok{$}\NormalTok{county) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(violation)) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ driver_gender), }\DataTypeTok{position =} \StringTok{"fill"}\NormalTok{)}
+\NormalTok{  \})}
+\NormalTok{\}}
+
+\KeywordTok{shinyApp}\NormalTok{(ui, server)}
 \end{Highlighting}
 \end{Shaded}
 
-For a more comprehensive example see:
-\url{https://cengel.shinyapps.io/RioSlaveMarket/}
+There are numerous examples of shiny apps of different complexity, for
+example here: \url{http://shiny.rstudio.com/gallery/}
 
 \chapter{Domain specific graphs}\label{domains}
 

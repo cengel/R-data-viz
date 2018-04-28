@@ -1,69 +1,190 @@
-```{r, echo=FALSE, purl=FALSE, message = FALSE}
-knitr::opts_chunk$set(results='hide', comment = "#>", purl = FALSE)
+```{r, echo=FALSE, purl=FALSE, results='hide', message = FALSE}
+knitr::opts_chunk$set( comment = "#>", purl = FALSE)
 library(shiny)
-suppressPackageStartupMessages(library(plotly))
-## needed to run this to have shiny show up in the Rmd:
-## (https://cran.r-project.org/web/packages/webshot/README.html)
-#install.packages("webshot")
-#webshot::install_phantomjs()
-## "phantomjs has been installed to /Users/cengel/Library/Application Support/PhantomJS"
-## Error: "appshot of Shiny app objects not yet supported" :( is that in bookdown??
+library(plotly)
 ```
 
 # Interactive graphs
 
 > Learning Objectives
 >
-> * Be aware of R interactive graphing capabilities
-> * Understand the basic structure of a shiny app
+> * Be aware of R interactive graphing capabilities and options
+> * Know some graphing packages that are based on htmlwidgets
+> * Create a simple interactive plot
+> * Understand the basic structure of a `shiny` app
 
 ------------
 
-## plotly
+## **`htmlwidgets`**
+
+JavaScript is probably the most widely used scripting languages to create interactive webpages (html). The [`htmlwidgets` package]((https://CRAN.R-project.org/package=htmlwidgets)) provides a framework to bind R commands to various existing, interactive JavaScript libraries, including those that greate data graphs. The interactive components ("widgets") created using the framework can be:
+
+- used at the R console for data analysis just like conventional R plots (via RStudio Viewer).
+- seamlessly embedded within R Markdown documents and Shiny web applications.
+- saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
+
+While you can certainly develop yor own widget, there are a number of widgets already available, that you can install and that make creating interacive visualizations much easier. In fact, the packages used for the examples in section \@ref(domain) are all based on htmlwidgets.
+
+For a complete list check out the [htmlwidgets gallery](http://gallery.htmlwidgets.org).
+
+The `htmlwidgets` framework ensures that the graphics are rendered locally. By default they either run in your web browser or in the R Studio viewer. If you use [R Markdown](https://rmarkdown.rstudio.com/), the html pages rendered contain the full JavaScript code, so you can also also deploy them to a standard webserver (like github pages).
 
 
+## **`plotly`**
+
+We will start with a widget called `plotly`. `plotly` binds R commands to the [JavaScript plotly.js graphing library](https://plot.ly/javascript/). The R package allows you to easily translate `ggplot2` graphics to an interactive web-based version.
+
+First we install and load the package.
 ```{r load-plotly, eval=FALSE}
+install.packages(plotly) # if you haven't installed the package
 library(plotly)
 ```
 
-
-Using the `ggplotly` function: 
-
-```{r ggplotly-cars, results='show', message = FALSE, warning=FALSE}
-p <- ggplot(cars, aes(speed, dist)) + geom_point()
-ggplotly(p)
+Let us go back to our initial scatterplot.
+```{r, eval=FALSE}
+ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped)) +
+  geom_point()
 ```
 
-(dev. version of ggplot2 now has a `ggplotly()` function)
+To turn this into an interactive graph with `plotly`, we create a ggplot object by assigning it to a variable:
 
-
-Using the `plot_ly` function:
-
-```{r plotly-cars, results='show'}
-library(plotly)
-plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = "markers")
+```{r ggplotly-object}
+p <- ggplot(data = stops_county, aes(x = pct_black_stopped, y = pct_white_stopped)) +
+  geom_point()
 ```
+
+We can then pass that object to the `ggplotly` function (the dev. version of ggplot2 has a `ggplotly()` function, but this works): 
+
+```{r ggplotly-scatter, results='show', message = FALSE, warning=FALSE}
+ggplotly(p) 
+```
+
+This is really all that is to it.
+
+ALternatively, it is possible to forgo ggplot and using the `plot_ly` function to create your graph from scratch. For our example that would be:
+
+```{r plotly-scatter, results='show'}
+plot_ly(stops_county, x = ~pct_black_stopped, y = ~pct_white_stopped)
+```
+
+
+> <h3>Challenge</h3>
+> Go back to the box plot we created earlier using the Chickasaw_stops:
+> `ggplot(Chickasaw_stops, aes(x = violation, y = driver_age)) +`
+> `geom_boxplot()`
+> Create an interactive version of it, using both approaches, 
+> `ggplotly` and `plot_ly`. 
+
+
+The full documentation of all the arguments `plot_ly` can take is here: https://plot.ly/r/reference/
+
 
 
 ## shiny
 
-https://cengel.shinyapps.io/shiny_demo/
+`htmlwidgets` are very powerful, but if you require more customization and flexibility, particularly with regard to user input, you may want to look into [`shiny`](https://CRAN.R-project.org/package=shiny ). Because it executes acutal R code, which web browsers cannot execute, `shiny` requires its own server. 
 
-```{r shiny-cars, eval=FALSE}
+There are verious ways in which a shiny application can be run. We will use an example run it from the 
+
+R Commandline. 
+
+Rmarkdown: To call Shiny code from an R Markdown document, add runtime: shiny to the header
+shiny server: either run your own, or host it at  ShinyApps.io
+
+
+
+Building shiny apps deserves its own workshop, so here - to give you a teaser - I have provided only a very simple example. We will re-use our barchart from earlier where we plotted the proportional amount of traffic violations for each gender:
+
+```{r violation-plot, eval=FALSE}
+ggplot(stops, aes(violation)) + 
+        geom_bar(aes(fill = driver_gender), position = "fill")
+```
+
+We want to create a plot where we can choose which county we'd like to display this bar chart for.
+
+I have prepared the code for this, which you can run like this:
+
+1. Install and load the `shiny` package (`install.packages(shiny)`).
+
+2. In your `R-data-viz` folder create a new folder called `shinyapps`.
+
+3. Download `app.R` into that folder:
+```{r shinyapp-download, eval=FALSE}
+download.file("https://raw.githubusercontent.com/cengel/R-data-viz/master/shinyapp/app.R", "shinyapp/app.R")
+```
+
+4. In your R console:
+```{r run-shinyapp, eval=FALSE}
 library(shiny)
-library(ggplot2)
-inputPanel(
-    sliderInput("speed_range", 
-        label = "Range of Speed:",
-        min = min(cars$speed), 
-        max = max(cars$speed), 
-        value = range(cars$speed)))
-
-renderPlot({
-    cars_sel <- subset(cars, speed >= input$speed_range[1] & 
-                           speed < input$speed_range[2])
-    ggplot(cars_sel, aes(speed, dist)) + geom_point()})
+runApp("./shinyapp/")
 ```
 
 
-For a more comprehensive example see: https://cengel.shinyapps.io/RioSlaveMarket/
+Let us now go over the code in the `app.R` script. 
+
+We define two functions and call them `ui` (for user interface, which we present to the user and receive input) and `server` (where the input is used and the magic happens).
+
+This is what happens in the `ui` function:
+
+Using some of the layout functions shiny comes with we define a panel with a sidebar, where the input is received the main panel, where the plot is going to be displahyed. We also assign the plot a name (`violationsPlot`) that we will reuse later. Lastly we add some text to help users understand what this graph about. 
+
+A very important function is `selectInput`, where we define the choices that the user has (the county names in the table) and also define the name of the variable that will hold the input from the user: `county`.
+
+The `server` is where input and output are processed. In this example we really only render the plot. You see that the name for our plot (`violationsPlot`) appears attached to the `output` variable. You can also detect our ggplot code from earlier, with the only difference that we use the input county value `input$county` to filter the data frame before we send them to ggplot to plot. 
+
+The very last line of the script binds the two together as a shiny app.
+
+```{r shiny-violations, eval=FALSE}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+
+# uncomment this if you need to reload the stops table
+# stops <- read.csv('https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv')
+
+## UI
+# Use a fluid Bootstrap layout
+ui <- fluidPage(    
+  
+  # Give the page a title
+  titlePanel("Missisippi Violations by County"),
+  
+  # Generate a row with a sidebar
+  sidebarLayout(      
+    
+    # Define the sidebar with one input
+    sidebarPanel(
+      selectInput("county", "County:", 
+                  choices=unique(stops$county_name)),
+      hr(),
+      helpText("Data from Stanford Openpolicing Project.")
+    ),
+    
+    # Create a spot for the barplot
+    mainPanel(
+      plotOutput("violationsPlot")  
+    )
+    
+  )
+)
+
+## Server
+
+# Define a server for the Shiny app
+server <- function(input, output) {
+  
+  # Fill in the spot we created for a plot
+  output$violationsPlot <- renderPlot({
+    
+    stops %>% 
+      filter(county_name == input$county) %>% 
+      ggplot(aes(violation)) + 
+        geom_bar(aes(fill = driver_gender), position = "fill")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+There are numerous examples of shiny apps of different complexity, for example here: http://shiny.rstudio.com/gallery/

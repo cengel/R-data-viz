@@ -129,8 +129,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.9" data-path="data-visualization-with-ggplot2.html"><a href="data-visualization-with-ggplot2.html#customization"><i class="fa fa-check"></i><b>1.9</b> Customization</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="interactive-graphs.html"><a href="interactive-graphs.html"><i class="fa fa-check"></i><b>2</b> Interactive graphs</a><ul>
-<li class="chapter" data-level="2.1" data-path="interactive-graphs.html"><a href="interactive-graphs.html#plotly"><i class="fa fa-check"></i><b>2.1</b> plotly</a></li>
-<li class="chapter" data-level="2.2" data-path="interactive-graphs.html"><a href="interactive-graphs.html#shiny"><i class="fa fa-check"></i><b>2.2</b> shiny</a></li>
+<li class="chapter" data-level="2.1" data-path="interactive-graphs.html"><a href="interactive-graphs.html#htmlwidgets"><i class="fa fa-check"></i><b>2.1</b> <strong><code>htmlwidgets</code></strong></a></li>
+<li class="chapter" data-level="2.2" data-path="interactive-graphs.html"><a href="interactive-graphs.html#plotly"><i class="fa fa-check"></i><b>2.2</b> <strong><code>plotly</code></strong></a></li>
+<li class="chapter" data-level="2.3" data-path="interactive-graphs.html"><a href="interactive-graphs.html#shiny"><i class="fa fa-check"></i><b>2.3</b> shiny</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="domains.html"><a href="domains.html"><i class="fa fa-check"></i><b>3</b> Domain specific graphs</a><ul>
 <li class="chapter" data-level="3.1" data-path="domains.html"><a href="domains.html#heatmaps-e.g.-iheatmapr"><i class="fa fa-check"></i><b>3.1</b> Heatmaps (e.g. <strong><code>iheatmapr</code></strong>)</a></li>
@@ -329,7 +330,8 @@ Challenge
 <div id="boxplot" class="section level2">
 <h2><span class="header-section-number">1.5</span> Boxplot</h2>
 <p>For this segment let’s extract and work with the stops for Chickasaw County only.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Chickasaw_stops &lt;-<span class="st"> </span><span class="kw">filter</span>(stops, county_name <span class="op">==</span><span class="st"> &quot;Chickasaw County&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+Chickasaw_stops &lt;-<span class="st"> </span><span class="kw">filter</span>(stops, county_name <span class="op">==</span><span class="st"> &quot;Chickasaw County&quot;</span>)</code></pre></div>
 <p>We can use boxplots to visualize the distribution of driver age within each violation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> Chickasaw_stops, <span class="kw">aes</span>(<span class="dt">x =</span> violation, <span class="dt">y =</span> driver_age)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_boxplot</span>()</code></pre></div>
