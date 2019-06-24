@@ -43,17 +43,20 @@ main_heatmap(measles, name = "Measles<br>Cases", x_categorical = FALSE,
                                 font = list(size = 8)))
 ```
 
-Note that `iheatmapr` has a [Bioconductor](https://bioconductor.org) dependency, so if you have never installed a package from Bioconductor before you will need to install BiocInstaller first:
+Note that `iheatmapr` has a [Bioconductor](https://bioconductor.org) dependency, so if you receive a message `package ‘S4Vectors’ is not available` do this:
 
 ```{r bioconductor, eval=FALSE}
-source("https://bioconductor.org/biocLite.R")
-biocLite("BiocInstaller")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("S4Vectors")
 ```
 
+([More info here](http://www.bioconductor.org/packages/release/bioc/html/S4Vectors.html).)
 
 ## Networks (e.g. **`visNetwork`**)
 
-[**`visNetwork`**](https://CRAN.R-project.org/package=visNetwork ) is an R interface to the ['vis.js' JavaScript library](http://visjs.org/), a package to visualize networks in an interactive fashion. It takes a table of nodes (vertices) and a table of edges (links) as inputs. The example below is taken from [Katherine Ognyanova's tutorial](http://kateto.net/network-visualization) and represents a network of hyperlinks and mentions among various news sources.
+[**`visNetwork`**](https://CRAN.R-project.org/package=visNetwork) is an R interface to the ['vis.js' JavaScript library](http://visjs.org/), a package to visualize networks in an interactive fashion. It takes a table of nodes (vertices) and a table of edges (links) as inputs. The example below is taken from [Katherine Ognyanova's tutorial](http://kateto.net/network-visualization) and represents a network of hyperlinks and mentions among various news sources.
 
 ```{r network-demo, results='show'}
 library('visNetwork') 

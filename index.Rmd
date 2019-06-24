@@ -43,6 +43,8 @@ download.file("https://github.com/cengel/R-data-viz/raw/master/data/MS_stops_by_
 
 Chang, W. (2012): R Graphics Cookbook. [Stanford only online access](https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford&xmlId=9781449363086)
 
+Healy, K (2019): Data visualization : a practical introduction. [Searchworks](https://searchworks.stanford.edu/view/12684817)
+
 Murrell, P. (2012): R Graphics, 2nd ed. [Stanford only online access](https://stanford.idm.oclc.org/login?url=http://proquest.safaribooksonline.com/?uiCode=stanford&xmlId=9781439831779)
 
 Rahlf, T (2017): Data Visualisation with R. http://www.springer.com/us/book/9783319497501

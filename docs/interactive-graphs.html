@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Data Visualization with R</title>
-  <meta name="description" content="Workshop materials for Data Visualization with R">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Interactive graphs | Data Visualization with R</title>
+  <meta name="description" content="Workshop materials for Data Visualization with R" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Data Visualization with R" />
+  <meta property="og:title" content="Chapter 2 Interactive graphs | Data Visualization with R" />
   <meta property="og:type" content="book" />
   
   
@@ -17,24 +16,25 @@
   <meta name="github-repo" content="cengel/R-data-viz" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Data Visualization with R" />
+  <meta name="twitter:title" content="Chapter 2 Interactive graphs | Data Visualization with R" />
   
   <meta name="twitter:description" content="Workshop materials for Data Visualization with R" />
   
 
-<meta name="author" content="Claudia A Engel">
+<meta name="author" content="Claudia A Engel" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="data-visualization-with-ggplot2.html">
 <link rel="next" href="domains.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -46,55 +46,83 @@
 
 
 
-<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
-<script src="libs/plotly-binding-4.7.1/plotly.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.0/plotly.js"></script>
 <script src="libs/typedarray-0.1/typedarray.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs-1.29.2/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs-1.29.2/plotly-latest.min.js"></script>
-<script src="libs/iheatmapr-binding-0.4.3/iheatmapr.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.46.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.46.1/plotly-latest.min.js"></script>
+<link href="libs/plotlyjs-1.27.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotlyjs-1.27.1/plotly-latest.min.js"></script>
+<script src="libs/iheatmapr-binding-0.4.8/iheatmapr.js"></script>
 <link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
 <script src="libs/vis-4.20.1/vis.min.js"></script>
-<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
+<script src="libs/visNetwork-binding-2.0.7/visNetwork.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -134,9 +162,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3" data-path="interactive-graphs.html"><a href="interactive-graphs.html#shiny"><i class="fa fa-check"></i><b>2.3</b> shiny</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="domains.html"><a href="domains.html"><i class="fa fa-check"></i><b>3</b> Domain specific graphs</a><ul>
-<li class="chapter" data-level="3.1" data-path="domains.html"><a href="domains.html#heatmaps-e.g.-iheatmapr"><i class="fa fa-check"></i><b>3.1</b> Heatmaps (e.g. <strong><code>iheatmapr</code></strong>)</a></li>
-<li class="chapter" data-level="3.2" data-path="domains.html"><a href="domains.html#networks-e.g.-visnetwork"><i class="fa fa-check"></i><b>3.2</b> Networks (e.g. <strong><code>visNetwork</code></strong>)</a></li>
-<li class="chapter" data-level="3.3" data-path="domains.html"><a href="domains.html#maps-e.g.-tmap"><i class="fa fa-check"></i><b>3.3</b> Maps (e.g. <strong><code>tmap</code></strong>)</a></li>
+<li class="chapter" data-level="3.1" data-path="domains.html"><a href="domains.html#heatmaps-e.g.-iheatmapr"><i class="fa fa-check"></i><b>3.1</b> Heatmaps (e.g. <strong><code>iheatmapr</code></strong>)</a></li>
+<li class="chapter" data-level="3.2" data-path="domains.html"><a href="domains.html#networks-e.g.-visnetwork"><i class="fa fa-check"></i><b>3.2</b> Networks (e.g. <strong><code>visNetwork</code></strong>)</a></li>
+<li class="chapter" data-level="3.3" data-path="domains.html"><a href="domains.html#maps-e.g.-tmap"><i class="fa fa-check"></i><b>3.3</b> Maps (e.g. <strong><code>tmap</code></strong>)</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -186,34 +214,38 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">2.2</span> <strong><code>plotly</code></strong></h2>
 <p>We will start with a widget called <code>plotly</code>. <code>plotly</code> binds R commands to the <a href="https://plot.ly/javascript/">JavaScript plotly.js graphing library</a>. The R package allows you to easily translate <code>ggplot2</code> graphics to an interactive web-based version.</p>
 <p>First we install and load the package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(plotly) <span class="co"># if you haven&#39;t installed the package</span>
-<span class="kw">library</span>(plotly)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(plotly) <span class="co"># if you haven&#39;t installed the package</span>
+<span class="kw">library</span>(plotly)</code></pre>
 <p>Let us go back to our initial scatterplot.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> stops_county, <span class="kw">aes</span>(<span class="dt">x =</span> pct_black_stopped, <span class="dt">y =</span> pct_white_stopped)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> stops_county, <span class="kw">aes</span>(<span class="dt">x =</span> pct_black_stopped, <span class="dt">y =</span> pct_white_stopped)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre>
 <p>To turn this into an interactive graph with <code>plotly</code>, we create a ggplot object by assigning it to a variable:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> stops_county, <span class="kw">aes</span>(<span class="dt">x =</span> pct_black_stopped, <span class="dt">y =</span> pct_white_stopped)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> stops_county, <span class="kw">aes</span>(<span class="dt">x =</span> pct_black_stopped, <span class="dt">y =</span> pct_white_stopped)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre>
 <p>We can then pass that object to the <code>ggplotly</code> function (the dev. version of ggplot2 has a <code>ggplotly()</code> function, but this works):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplotly</span>(p) </code></pre></div>
-<div id="faa160f08d77" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="faa160f08d77">{"x":{"data":[{"x":[0.0328321225432224,0.109320252277505,0.293389955686854,0.25579692457896,0.039311241065627,0.146064301552106,0.181909295915811,0.311815561959654,0.317128096436614,0.0955315870570108,0.136271785804496,0.0546152503926016,0.0613091709712931,0.0890071477017791,0.234544596507787,0.171584073331424,0.0137459607258265,0.0647079899677535,0.494673295454545,0.472161572052402,0.0830819851933096,0.1285972177976,0.123681687440077,0.0317001620035903,0.0190664607303797,0.191960252935863,0.212282255683496,0.546967895362664,0.211626387981711,0.0487558624283481,0.124644280022766,0.547699386503067,0.0800054704595186,0.0850793972908528,0.209757716561567,0.037748128864302,0.109842719431761,0.0941492343551766,0.0636989670437777,0.174081035923141,0.0699268354217475,0.0638297872340425,0.132262282832057,0.0656909202078875,0.0357040323633042,0.0145872865275142,0.00785264738148854,0.511931766627348,0.340971780182474,0.00423536530025715,0.184762773722628,0.00249500998003992,0.104696511947267,0.0480663303762973,0.0370172390752372,0.0981524249422633,0.0967281719611946,0.0999784063917081,0.0915903413821815,0.152237710931768,0.0062984496124031,0.21302783563719,0.244618964514252,0.171130648129217,0.0188772975658222,0.272753623188406,0.152310409104287,0.0394015701377574,0.10632216760032,0.0971946727118164,0.183070866141732,0.000505433409148345,0.143502257902659,0.139184397163121,0.0550271444082519,0.0418168914123492,0.193761696818465,0.030040733197556,0.00514917461759806,0.252943155062227,0.0354451008352007,0.136290021178522],"y":[0.0279247044181705,0.0911510312707917,0.179986477349561,0.197858953892384,0.0180023228803717,0.121818344199339,0.0922498267841235,0.105341689048045,0.154799411888259,0.0644762409468292,0.242328874901652,0.025709388687869,0.0312918543772069,0.154991243432574,0.195704415740463,0.0572550302633731,0.00539634045096802,0.057601717753774,0.222933760256154,0.189702816696563,0.0736811081638668,0.119506296388958,0.0824976062087386,0.034103838333419,0.0252811918063315,0.431884057971014,0.334810438207779,1.52821670428894,0.100241770503999,0.0517475365340362,0.118973156111545,0.60643330179754,0.0813344962930659,0.0457225261907791,0.328636001063547,0.0191362883743655,0.0462417385459841,0.128880916241203,0.0370104204096299,0.109999172938549,0.0562493602211076,0.0276111944027986,0.101677767473232,0.0464254577157803,0.0112758808732211,0.00675596971461852,0.00469221316054072,0.195900142074285,0.316973050151704,0.00279313686370632,0.0927074968975838,0.00323206205559147,0.0730914429530201,0.0551284343524644,0.0121522914826227,0.0561381209617625,0.116672136527732,0.0489804325437693,0.0802947111549111,0.304986642920748,0.00153750994079703,0.157919621749409,0.693740685543964,0.104758584626111,0.0151166611896155,0.139040079168728,0.113380575239683,0.0201619304651532,0.0549346765307729,0.0633963948881076,0.0865681338314114,0,0.0830294776611167,0.11045562947157,0.0614182490337758,0.0946006247211067,0.221655422083265,0.0123096446700508,0.0033358042994811,0.215163507602583,0.0201909959072306,0.124883504193849],"text":["pct_black_stopped: 0.0328321225<br />pct_white_stopped: 0.027924704","pct_black_stopped: 0.1093202523<br />pct_white_stopped: 0.091151031","pct_black_stopped: 0.2933899557<br />pct_white_stopped: 0.179986477","pct_black_stopped: 0.2557969246<br />pct_white_stopped: 0.197858954","pct_black_stopped: 0.0393112411<br />pct_white_stopped: 0.018002323","pct_black_stopped: 0.1460643016<br />pct_white_stopped: 0.121818344","pct_black_stopped: 0.1819092959<br />pct_white_stopped: 0.092249827","pct_black_stopped: 0.3118155620<br />pct_white_stopped: 0.105341689","pct_black_stopped: 0.3171280964<br />pct_white_stopped: 0.154799412","pct_black_stopped: 0.0955315871<br />pct_white_stopped: 0.064476241","pct_black_stopped: 0.1362717858<br />pct_white_stopped: 0.242328875","pct_black_stopped: 0.0546152504<br />pct_white_stopped: 0.025709389","pct_black_stopped: 0.0613091710<br />pct_white_stopped: 0.031291854","pct_black_stopped: 0.0890071477<br />pct_white_stopped: 0.154991243","pct_black_stopped: 0.2345445965<br />pct_white_stopped: 0.195704416","pct_black_stopped: 0.1715840733<br />pct_white_stopped: 0.057255030","pct_black_stopped: 0.0137459607<br />pct_white_stopped: 0.005396340","pct_black_stopped: 0.0647079900<br />pct_white_stopped: 0.057601718","pct_black_stopped: 0.4946732955<br />pct_white_stopped: 0.222933760","pct_black_stopped: 0.4721615721<br />pct_white_stopped: 0.189702817","pct_black_stopped: 0.0830819852<br />pct_white_stopped: 0.073681108","pct_black_stopped: 0.1285972178<br />pct_white_stopped: 0.119506296","pct_black_stopped: 0.1236816874<br />pct_white_stopped: 0.082497606","pct_black_stopped: 0.0317001620<br />pct_white_stopped: 0.034103838","pct_black_stopped: 0.0190664607<br />pct_white_stopped: 0.025281192","pct_black_stopped: 0.1919602529<br />pct_white_stopped: 0.431884058","pct_black_stopped: 0.2122822557<br />pct_white_stopped: 0.334810438","pct_black_stopped: 0.5469678954<br />pct_white_stopped: 1.528216704","pct_black_stopped: 0.2116263880<br />pct_white_stopped: 0.100241771","pct_black_stopped: 0.0487558624<br />pct_white_stopped: 0.051747537","pct_black_stopped: 0.1246442800<br />pct_white_stopped: 0.118973156","pct_black_stopped: 0.5476993865<br />pct_white_stopped: 0.606433302","pct_black_stopped: 0.0800054705<br />pct_white_stopped: 0.081334496","pct_black_stopped: 0.0850793973<br />pct_white_stopped: 0.045722526","pct_black_stopped: 0.2097577166<br />pct_white_stopped: 0.328636001","pct_black_stopped: 0.0377481289<br />pct_white_stopped: 0.019136288","pct_black_stopped: 0.1098427194<br />pct_white_stopped: 0.046241739","pct_black_stopped: 0.0941492344<br />pct_white_stopped: 0.128880916","pct_black_stopped: 0.0636989670<br />pct_white_stopped: 0.037010420","pct_black_stopped: 0.1740810359<br />pct_white_stopped: 0.109999173","pct_black_stopped: 0.0699268354<br />pct_white_stopped: 0.056249360","pct_black_stopped: 0.0638297872<br />pct_white_stopped: 0.027611194","pct_black_stopped: 0.1322622828<br />pct_white_stopped: 0.101677767","pct_black_stopped: 0.0656909202<br />pct_white_stopped: 0.046425458","pct_black_stopped: 0.0357040324<br />pct_white_stopped: 0.011275881","pct_black_stopped: 0.0145872865<br />pct_white_stopped: 0.006755970","pct_black_stopped: 0.0078526474<br />pct_white_stopped: 0.004692213","pct_black_stopped: 0.5119317666<br />pct_white_stopped: 0.195900142","pct_black_stopped: 0.3409717802<br />pct_white_stopped: 0.316973050","pct_black_stopped: 0.0042353653<br />pct_white_stopped: 0.002793137","pct_black_stopped: 0.1847627737<br />pct_white_stopped: 0.092707497","pct_black_stopped: 0.0024950100<br />pct_white_stopped: 0.003232062","pct_black_stopped: 0.1046965119<br />pct_white_stopped: 0.073091443","pct_black_stopped: 0.0480663304<br />pct_white_stopped: 0.055128434","pct_black_stopped: 0.0370172391<br />pct_white_stopped: 0.012152291","pct_black_stopped: 0.0981524249<br />pct_white_stopped: 0.056138121","pct_black_stopped: 0.0967281720<br />pct_white_stopped: 0.116672137","pct_black_stopped: 0.0999784064<br />pct_white_stopped: 0.048980433","pct_black_stopped: 0.0915903414<br />pct_white_stopped: 0.080294711","pct_black_stopped: 0.1522377109<br />pct_white_stopped: 0.304986643","pct_black_stopped: 0.0062984496<br />pct_white_stopped: 0.001537510","pct_black_stopped: 0.2130278356<br />pct_white_stopped: 0.157919622","pct_black_stopped: 0.2446189645<br />pct_white_stopped: 0.693740686","pct_black_stopped: 0.1711306481<br />pct_white_stopped: 0.104758585","pct_black_stopped: 0.0188772976<br />pct_white_stopped: 0.015116661","pct_black_stopped: 0.2727536232<br />pct_white_stopped: 0.139040079","pct_black_stopped: 0.1523104091<br />pct_white_stopped: 0.113380575","pct_black_stopped: 0.0394015701<br />pct_white_stopped: 0.020161930","pct_black_stopped: 0.1063221676<br />pct_white_stopped: 0.054934677","pct_black_stopped: 0.0971946727<br />pct_white_stopped: 0.063396395","pct_black_stopped: 0.1830708661<br />pct_white_stopped: 0.086568134","pct_black_stopped: 0.0005054334<br />pct_white_stopped: 0.000000000","pct_black_stopped: 0.1435022579<br />pct_white_stopped: 0.083029478","pct_black_stopped: 0.1391843972<br />pct_white_stopped: 0.110455629","pct_black_stopped: 0.0550271444<br />pct_white_stopped: 0.061418249","pct_black_stopped: 0.0418168914<br />pct_white_stopped: 0.094600625","pct_black_stopped: 0.1937616968<br />pct_white_stopped: 0.221655422","pct_black_stopped: 0.0300407332<br />pct_white_stopped: 0.012309645","pct_black_stopped: 0.0051491746<br />pct_white_stopped: 0.003335804","pct_black_stopped: 0.2529431551<br />pct_white_stopped: 0.215163508","pct_black_stopped: 0.0354451008<br />pct_white_stopped: 0.020190996","pct_black_stopped: 0.1362900212<br />pct_white_stopped: 0.124883504"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-0.0268542642455476,0.575059084157763],"ticktext":["0.0","0.2","0.4"],"tickvals":[0,0.2,0.4],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"pct_black_stopped","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-0.076410835214447,1.60462753950339],"ticktext":["0.0","0.5","1.0","1.5"],"tickvals":[0,0.5,1,1.5],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"pct_white_stopped","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest"},"source":"A","attrs":{"faa15d930bdf":{"x":{},"y":{},"type":"ggplotly"}},"cur_data":"faa15d930bdf","visdat":{"faa15d930bdf":["function (y) ","x"]},"config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1}},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":{"render":[{"code":"function(el, x) { var ctConfig = crosstalk.var('plotlyCrosstalkOpts').set({\"on\":\"plotly_click\",\"persistent\":false,\"dynamic\":false,\"selectize\":false,\"opacityDim\":0.2,\"selected\":{\"opacity\":1}}); }","data":null}]}}</script>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplotly</span>(p) </code></pre>
+<div id="htmlwidget-cfd043e66668597a99fa" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cfd043e66668597a99fa">{"x":{"data":[{"x":[0.0328321225432224,0.109320252277505,0.293389955686854,0.25579692457896,0.039311241065627,0.146064301552106,0.181909295915811,0.311815561959654,0.317128096436614,0.0955315870570108,0.136271785804496,0.0546152503926016,0.0613091709712931,0.0890071477017791,0.234544596507787,0.171584073331424,0.0137459607258265,0.0647079899677535,0.494673295454545,0.472161572052402,0.0830819851933096,0.1285972177976,0.123681687440077,0.0317001620035903,0.0190664607303797,0.191960252935863,0.212282255683496,0.546967895362664,0.211626387981711,0.0487558624283481,0.124644280022766,0.547699386503067,0.0800054704595186,0.0850793972908528,0.209757716561567,0.037748128864302,0.109842719431761,0.0941492343551766,0.0636989670437777,0.174081035923141,0.0699268354217475,0.0638297872340425,0.132262282832057,0.0656909202078875,0.0357040323633042,0.0145872865275142,0.00785264738148854,0.511931766627348,0.340971780182474,0.00423536530025715,0.184762773722628,0.00249500998003992,0.104696511947267,0.0480663303762973,0.0370172390752372,0.0981524249422633,0.0967281719611946,0.0999784063917081,0.0915903413821815,0.152237710931768,0.0062984496124031,0.21302783563719,0.244618964514252,0.171130648129217,0.0188772975658222,0.272753623188406,0.152310409104287,0.0394015701377574,0.10632216760032,0.0971946727118164,0.183070866141732,0.000505433409148345,0.143502257902659,0.139184397163121,0.0550271444082519,0.0418168914123492,0.193761696818465,0.030040733197556,0.00514917461759806,0.252943155062227,0.0354451008352007,0.136290021178522],"y":[0.0279247044181705,0.0911510312707917,0.179986477349561,0.197858953892384,0.0180023228803717,0.121818344199339,0.0922498267841235,0.105341689048045,0.154799411888259,0.0644762409468292,0.242328874901652,0.025709388687869,0.0312918543772069,0.154991243432574,0.195704415740463,0.0572550302633731,0.00539634045096802,0.057601717753774,0.222933760256154,0.189702816696563,0.0736811081638668,0.119506296388958,0.0824976062087386,0.034103838333419,0.0252811918063315,0.431884057971014,0.334810438207779,1.52821670428894,0.100241770503999,0.0517475365340362,0.118973156111545,0.60643330179754,0.0813344962930659,0.0457225261907791,0.328636001063547,0.0191362883743655,0.0462417385459841,0.128880916241203,0.0370104204096299,0.109999172938549,0.0562493602211076,0.0276111944027986,0.101677767473232,0.0464254577157803,0.0112758808732211,0.00675596971461852,0.00469221316054072,0.195900142074285,0.316973050151704,0.00279313686370632,0.0927074968975838,0.00323206205559147,0.0730914429530201,0.0551284343524644,0.0121522914826227,0.0561381209617625,0.116672136527732,0.0489804325437693,0.0802947111549111,0.304986642920748,0.00153750994079703,0.157919621749409,0.693740685543964,0.104758584626111,0.0151166611896155,0.139040079168728,0.113380575239683,0.0201619304651532,0.0549346765307729,0.0633963948881076,0.0865681338314114,0,0.0830294776611167,0.11045562947157,0.0614182490337758,0.0946006247211067,0.221655422083265,0.0123096446700508,0.0033358042994811,0.215163507602583,0.0201909959072306,0.124883504193849],"text":["pct_black_stopped: 0.0328321225<br />pct_white_stopped: 0.027924704","pct_black_stopped: 0.1093202523<br />pct_white_stopped: 0.091151031","pct_black_stopped: 0.2933899557<br />pct_white_stopped: 0.179986477","pct_black_stopped: 0.2557969246<br />pct_white_stopped: 0.197858954","pct_black_stopped: 0.0393112411<br />pct_white_stopped: 0.018002323","pct_black_stopped: 0.1460643016<br />pct_white_stopped: 0.121818344","pct_black_stopped: 0.1819092959<br />pct_white_stopped: 0.092249827","pct_black_stopped: 0.3118155620<br />pct_white_stopped: 0.105341689","pct_black_stopped: 0.3171280964<br />pct_white_stopped: 0.154799412","pct_black_stopped: 0.0955315871<br />pct_white_stopped: 0.064476241","pct_black_stopped: 0.1362717858<br />pct_white_stopped: 0.242328875","pct_black_stopped: 0.0546152504<br />pct_white_stopped: 0.025709389","pct_black_stopped: 0.0613091710<br />pct_white_stopped: 0.031291854","pct_black_stopped: 0.0890071477<br />pct_white_stopped: 0.154991243","pct_black_stopped: 0.2345445965<br />pct_white_stopped: 0.195704416","pct_black_stopped: 0.1715840733<br />pct_white_stopped: 0.057255030","pct_black_stopped: 0.0137459607<br />pct_white_stopped: 0.005396340","pct_black_stopped: 0.0647079900<br />pct_white_stopped: 0.057601718","pct_black_stopped: 0.4946732955<br />pct_white_stopped: 0.222933760","pct_black_stopped: 0.4721615721<br />pct_white_stopped: 0.189702817","pct_black_stopped: 0.0830819852<br />pct_white_stopped: 0.073681108","pct_black_stopped: 0.1285972178<br />pct_white_stopped: 0.119506296","pct_black_stopped: 0.1236816874<br />pct_white_stopped: 0.082497606","pct_black_stopped: 0.0317001620<br />pct_white_stopped: 0.034103838","pct_black_stopped: 0.0190664607<br />pct_white_stopped: 0.025281192","pct_black_stopped: 0.1919602529<br />pct_white_stopped: 0.431884058","pct_black_stopped: 0.2122822557<br />pct_white_stopped: 0.334810438","pct_black_stopped: 0.5469678954<br />pct_white_stopped: 1.528216704","pct_black_stopped: 0.2116263880<br />pct_white_stopped: 0.100241771","pct_black_stopped: 0.0487558624<br />pct_white_stopped: 0.051747537","pct_black_stopped: 0.1246442800<br />pct_white_stopped: 0.118973156","pct_black_stopped: 0.5476993865<br />pct_white_stopped: 0.606433302","pct_black_stopped: 0.0800054705<br />pct_white_stopped: 0.081334496","pct_black_stopped: 0.0850793973<br />pct_white_stopped: 0.045722526","pct_black_stopped: 0.2097577166<br />pct_white_stopped: 0.328636001","pct_black_stopped: 0.0377481289<br />pct_white_stopped: 0.019136288","pct_black_stopped: 0.1098427194<br />pct_white_stopped: 0.046241739","pct_black_stopped: 0.0941492344<br />pct_white_stopped: 0.128880916","pct_black_stopped: 0.0636989670<br />pct_white_stopped: 0.037010420","pct_black_stopped: 0.1740810359<br />pct_white_stopped: 0.109999173","pct_black_stopped: 0.0699268354<br />pct_white_stopped: 0.056249360","pct_black_stopped: 0.0638297872<br />pct_white_stopped: 0.027611194","pct_black_stopped: 0.1322622828<br />pct_white_stopped: 0.101677767","pct_black_stopped: 0.0656909202<br />pct_white_stopped: 0.046425458","pct_black_stopped: 0.0357040324<br />pct_white_stopped: 0.011275881","pct_black_stopped: 0.0145872865<br />pct_white_stopped: 0.006755970","pct_black_stopped: 0.0078526474<br />pct_white_stopped: 0.004692213","pct_black_stopped: 0.5119317666<br />pct_white_stopped: 0.195900142","pct_black_stopped: 0.3409717802<br />pct_white_stopped: 0.316973050","pct_black_stopped: 0.0042353653<br />pct_white_stopped: 0.002793137","pct_black_stopped: 0.1847627737<br />pct_white_stopped: 0.092707497","pct_black_stopped: 0.0024950100<br />pct_white_stopped: 0.003232062","pct_black_stopped: 0.1046965119<br />pct_white_stopped: 0.073091443","pct_black_stopped: 0.0480663304<br />pct_white_stopped: 0.055128434","pct_black_stopped: 0.0370172391<br />pct_white_stopped: 0.012152291","pct_black_stopped: 0.0981524249<br />pct_white_stopped: 0.056138121","pct_black_stopped: 0.0967281720<br />pct_white_stopped: 0.116672137","pct_black_stopped: 0.0999784064<br />pct_white_stopped: 0.048980433","pct_black_stopped: 0.0915903414<br />pct_white_stopped: 0.080294711","pct_black_stopped: 0.1522377109<br />pct_white_stopped: 0.304986643","pct_black_stopped: 0.0062984496<br />pct_white_stopped: 0.001537510","pct_black_stopped: 0.2130278356<br />pct_white_stopped: 0.157919622","pct_black_stopped: 0.2446189645<br />pct_white_stopped: 0.693740686","pct_black_stopped: 0.1711306481<br />pct_white_stopped: 0.104758585","pct_black_stopped: 0.0188772976<br />pct_white_stopped: 0.015116661","pct_black_stopped: 0.2727536232<br />pct_white_stopped: 0.139040079","pct_black_stopped: 0.1523104091<br />pct_white_stopped: 0.113380575","pct_black_stopped: 0.0394015701<br />pct_white_stopped: 0.020161930","pct_black_stopped: 0.1063221676<br />pct_white_stopped: 0.054934677","pct_black_stopped: 0.0971946727<br />pct_white_stopped: 0.063396395","pct_black_stopped: 0.1830708661<br />pct_white_stopped: 0.086568134","pct_black_stopped: 0.0005054334<br />pct_white_stopped: 0.000000000","pct_black_stopped: 0.1435022579<br />pct_white_stopped: 0.083029478","pct_black_stopped: 0.1391843972<br />pct_white_stopped: 0.110455629","pct_black_stopped: 0.0550271444<br />pct_white_stopped: 0.061418249","pct_black_stopped: 0.0418168914<br />pct_white_stopped: 0.094600625","pct_black_stopped: 0.1937616968<br />pct_white_stopped: 0.221655422","pct_black_stopped: 0.0300407332<br />pct_white_stopped: 0.012309645","pct_black_stopped: 0.0051491746<br />pct_white_stopped: 0.003335804","pct_black_stopped: 0.2529431551<br />pct_white_stopped: 0.215163508","pct_black_stopped: 0.0354451008<br />pct_white_stopped: 0.020190996","pct_black_stopped: 0.1362900212<br />pct_white_stopped: 0.124883504"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0268542642455476,0.575059084157763],"tickmode":"array","ticktext":["0.0","0.2","0.4"],"tickvals":[0,0.2,0.4],"categoryorder":"array","categoryarray":["0.0","0.2","0.4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"pct_black_stopped","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.076410835214447,1.60462753950339],"tickmode":"array","ticktext":["0.0","0.5","1.0","1.5"],"tickvals":[0,0.5,1,1.5],"categoryorder":"array","categoryarray":["0.0","0.5","1.0","1.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"pct_white_stopped","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"a6022e4ee4":{"x":{},"y":{},"type":"scatter"}},"cur_data":"a6022e4ee4","visdat":{"a6022e4ee4":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>This is really all that is to it.</p>
 <p>ALternatively, it is possible to forgo ggplot and using the <code>plot_ly</code> function to create your graph from scratch. For our example that would be:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(stops_county, <span class="dt">x =</span> <span class="op">~</span>pct_black_stopped, <span class="dt">y =</span> <span class="op">~</span>pct_white_stopped)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(stops_county, <span class="dt">x =</span> <span class="op">~</span>pct_black_stopped, <span class="dt">y =</span> <span class="op">~</span>pct_white_stopped)</code></pre>
 <pre><code>#&gt; No trace type specified:
 #&gt;   Based on info supplied, a &#39;scatter&#39; trace seems appropriate.
 #&gt;   Read more about this trace type -&gt; https://plot.ly/r/reference/#scatter</code></pre>
 <pre><code>#&gt; No scatter mode specifed:
 #&gt;   Setting the mode to markers
 #&gt;   Read more about this attribute -&gt; https://plot.ly/r/reference/#scatter-mode</code></pre>
-<div id="faa17e69aae1" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="faa17e69aae1">{"x":{"visdat":{"faa112b459a6":["function () ","plotlyVisDat"]},"cur_data":"faa112b459a6","attrs":{"faa112b459a6":{"x":{},"y":{},"alpha":1,"sizes":[10,100]}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"pct_black_stopped"},"yaxis":{"domain":[0,1],"title":"pct_white_stopped"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"data":[{"x":[0.0328321225432224,0.109320252277505,0.293389955686854,0.25579692457896,0.039311241065627,0.146064301552106,0.181909295915811,0.311815561959654,0.317128096436614,0.0955315870570108,0.136271785804496,0.0546152503926016,0.0613091709712931,0.0890071477017791,0.234544596507787,0.171584073331424,0.0137459607258265,0.0647079899677535,0.494673295454545,0.472161572052402,0.0830819851933096,0.1285972177976,0.123681687440077,0.0317001620035903,0.0190664607303797,0.191960252935863,0.212282255683496,0.546967895362664,0.211626387981711,0.0487558624283481,0.124644280022766,0.547699386503067,0.0800054704595186,0.0850793972908528,0.209757716561567,0.037748128864302,0.109842719431761,0.0941492343551766,0.0636989670437777,0.174081035923141,0.0699268354217475,0.0638297872340425,0.132262282832057,0.0656909202078875,0.0357040323633042,0.0145872865275142,0.00785264738148854,0.511931766627348,0.340971780182474,0.00423536530025715,0.184762773722628,0.00249500998003992,0.104696511947267,0.0480663303762973,0.0370172390752372,0.0981524249422633,0.0967281719611946,0.0999784063917081,0.0915903413821815,0.152237710931768,0.0062984496124031,0.21302783563719,0.244618964514252,0.171130648129217,0.0188772975658222,0.272753623188406,0.152310409104287,0.0394015701377574,0.10632216760032,0.0971946727118164,0.183070866141732,0.000505433409148345,0.143502257902659,0.139184397163121,0.0550271444082519,0.0418168914123492,0.193761696818465,0.030040733197556,0.00514917461759806,0.252943155062227,0.0354451008352007,0.136290021178522],"y":[0.0279247044181705,0.0911510312707917,0.179986477349561,0.197858953892384,0.0180023228803717,0.121818344199339,0.0922498267841235,0.105341689048045,0.154799411888259,0.0644762409468292,0.242328874901652,0.025709388687869,0.0312918543772069,0.154991243432574,0.195704415740463,0.0572550302633731,0.00539634045096802,0.057601717753774,0.222933760256154,0.189702816696563,0.0736811081638668,0.119506296388958,0.0824976062087386,0.034103838333419,0.0252811918063315,0.431884057971014,0.334810438207779,1.52821670428894,0.100241770503999,0.0517475365340362,0.118973156111545,0.60643330179754,0.0813344962930659,0.0457225261907791,0.328636001063547,0.0191362883743655,0.0462417385459841,0.128880916241203,0.0370104204096299,0.109999172938549,0.0562493602211076,0.0276111944027986,0.101677767473232,0.0464254577157803,0.0112758808732211,0.00675596971461852,0.00469221316054072,0.195900142074285,0.316973050151704,0.00279313686370632,0.0927074968975838,0.00323206205559147,0.0730914429530201,0.0551284343524644,0.0121522914826227,0.0561381209617625,0.116672136527732,0.0489804325437693,0.0802947111549111,0.304986642920748,0.00153750994079703,0.157919621749409,0.693740685543964,0.104758584626111,0.0151166611896155,0.139040079168728,0.113380575239683,0.0201619304651532,0.0549346765307729,0.0633963948881076,0.0865681338314114,0,0.0830294776611167,0.11045562947157,0.0614182490337758,0.0946006247211067,0.221655422083265,0.0123096446700508,0.0033358042994811,0.215163507602583,0.0201909959072306,0.124883504193849],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1}},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":{"render":[{"code":"function(el, x) { var ctConfig = crosstalk.var('plotlyCrosstalkOpts').set({\"on\":\"plotly_click\",\"persistent\":false,\"dynamic\":false,\"selectize\":false,\"opacityDim\":0.2,\"selected\":{\"opacity\":1}}); }","data":null}]}}</script>
+<div id="htmlwidget-9ec0e96b1c2f9ef2f5af" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9ec0e96b1c2f9ef2f5af">{"x":{"visdat":{"a6060b67e8b":["function () ","plotlyVisDat"]},"cur_data":"a6060b67e8b","attrs":{"a6060b67e8b":{"x":{},"y":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20]}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"pct_black_stopped"},"yaxis":{"domain":[0,1],"automargin":true,"title":"pct_white_stopped"},"hovermode":"closest","showlegend":false},"source":"A","config":{"showSendToCloud":false},"data":[{"x":[0.0328321225432224,0.109320252277505,0.293389955686854,0.25579692457896,0.039311241065627,0.146064301552106,0.181909295915811,0.311815561959654,0.317128096436614,0.0955315870570108,0.136271785804496,0.0546152503926016,0.0613091709712931,0.0890071477017791,0.234544596507787,0.171584073331424,0.0137459607258265,0.0647079899677535,0.494673295454545,0.472161572052402,0.0830819851933096,0.1285972177976,0.123681687440077,0.0317001620035903,0.0190664607303797,0.191960252935863,0.212282255683496,0.546967895362664,0.211626387981711,0.0487558624283481,0.124644280022766,0.547699386503067,0.0800054704595186,0.0850793972908528,0.209757716561567,0.037748128864302,0.109842719431761,0.0941492343551766,0.0636989670437777,0.174081035923141,0.0699268354217475,0.0638297872340425,0.132262282832057,0.0656909202078875,0.0357040323633042,0.0145872865275142,0.00785264738148854,0.511931766627348,0.340971780182474,0.00423536530025715,0.184762773722628,0.00249500998003992,0.104696511947267,0.0480663303762973,0.0370172390752372,0.0981524249422633,0.0967281719611946,0.0999784063917081,0.0915903413821815,0.152237710931768,0.0062984496124031,0.21302783563719,0.244618964514252,0.171130648129217,0.0188772975658222,0.272753623188406,0.152310409104287,0.0394015701377574,0.10632216760032,0.0971946727118164,0.183070866141732,0.000505433409148345,0.143502257902659,0.139184397163121,0.0550271444082519,0.0418168914123492,0.193761696818465,0.030040733197556,0.00514917461759806,0.252943155062227,0.0354451008352007,0.136290021178522],"y":[0.0279247044181705,0.0911510312707917,0.179986477349561,0.197858953892384,0.0180023228803717,0.121818344199339,0.0922498267841235,0.105341689048045,0.154799411888259,0.0644762409468292,0.242328874901652,0.025709388687869,0.0312918543772069,0.154991243432574,0.195704415740463,0.0572550302633731,0.00539634045096802,0.057601717753774,0.222933760256154,0.189702816696563,0.0736811081638668,0.119506296388958,0.0824976062087386,0.034103838333419,0.0252811918063315,0.431884057971014,0.334810438207779,1.52821670428894,0.100241770503999,0.0517475365340362,0.118973156111545,0.60643330179754,0.0813344962930659,0.0457225261907791,0.328636001063547,0.0191362883743655,0.0462417385459841,0.128880916241203,0.0370104204096299,0.109999172938549,0.0562493602211076,0.0276111944027986,0.101677767473232,0.0464254577157803,0.0112758808732211,0.00675596971461852,0.00469221316054072,0.195900142074285,0.316973050151704,0.00279313686370632,0.0927074968975838,0.00323206205559147,0.0730914429530201,0.0551284343524644,0.0121522914826227,0.0561381209617625,0.116672136527732,0.0489804325437693,0.0802947111549111,0.304986642920748,0.00153750994079703,0.157919621749409,0.693740685543964,0.104758584626111,0.0151166611896155,0.139040079168728,0.113380575239683,0.0201619304651532,0.0549346765307729,0.0633963948881076,0.0865681338314114,0,0.0830294776611167,0.11045562947157,0.0614182490337758,0.0946006247211067,0.221655422083265,0.0123096446700508,0.0033358042994811,0.215163507602583,0.0201909959072306,0.124883504193849],"type":"scatter","mode":"markers","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <blockquote>
 <h3>
 Challenge
 </h3>
-<p>Go back to the box plot we created earlier using the Chickasaw_stops: <code>ggplot(Chickasaw_stops, aes(x = violation, y = driver_age)) +</code> <code>geom_boxplot()</code> Create an interactive version of it, using both approaches, <code>ggplotly</code> and <code>plot_ly</code>.</p>
+<p>Go back to the box plot we created earlier using the Chickasaw_stops:
+<code>ggplot(Chickasaw_stops, aes(x = violation, y = driver_age)) +</code>
+<code>geom_boxplot()</code>
+Create an interactive version of it, using both approaches,
+<code>ggplotly</code> and <code>plot_ly</code>.</p>
 </blockquote>
 <p>The full documentation of all the arguments <code>plot_ly</code> can take is here: <a href="https://plot.ly/r/reference/" class="uri">https://plot.ly/r/reference/</a></p>
 </div>
@@ -222,10 +254,11 @@ Challenge
 <p><code>htmlwidgets</code> are very powerful, but if you require more customization and flexibility, particularly with regard to user input, you may want to look into <a href="https://CRAN.R-project.org/package=shiny"><code>shiny</code></a>. Because it executes acutal R code, which web browsers cannot execute, <code>shiny</code> requires its own server.</p>
 <p>There are verious ways in which a shiny application can be run. We will use an example run it from the</p>
 <p>R Commandline.</p>
-<p>Rmarkdown: To call Shiny code from an R Markdown document, add runtime: shiny to the header shiny server: either run your own, or host it at ShinyApps.io</p>
+<p>Rmarkdown: To call Shiny code from an R Markdown document, add runtime: shiny to the header
+shiny server: either run your own, or host it at ShinyApps.io</p>
 <p>Building shiny apps deserves its own workshop, so here - to give you a teaser - I have provided only a very simple example. We will re-use our barchart from earlier where we plotted the proportional amount of traffic violations for each gender:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(stops, <span class="kw">aes</span>(violation)) <span class="op">+</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> driver_gender), <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(stops, <span class="kw">aes</span>(violation)) <span class="op">+</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> driver_gender), <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</code></pre>
 <p>We want to create a plot where we can choose which county we’d like to display this bar chart for.</p>
 <p>I have prepared the code for this, which you can run like this:</p>
 <ol style="list-style-type: decimal">
@@ -233,12 +266,12 @@ Challenge
 <li><p>In your <code>R-data-viz</code> folder create a new folder called <code>shinyapps</code>.</p></li>
 <li><p>Download <code>app.R</code> into that folder:</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://raw.githubusercontent.com/cengel/R-data-viz/master/shinyapp/app.R&quot;</span>, <span class="st">&quot;shinyapp/app.R&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">download.file</span>(<span class="st">&quot;https://raw.githubusercontent.com/cengel/R-data-viz/master/shinyapp/app.R&quot;</span>, <span class="st">&quot;shinyapp/app.R&quot;</span>)</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>In your R console:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">runApp</span>(<span class="st">&quot;./shinyapp/&quot;</span>)</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">runApp</span>(<span class="st">&quot;./shinyapp/&quot;</span>)</code></pre>
 <p>Let us now go over the code in the <code>app.R</code> script.</p>
 <p>We define two functions and call them <code>ui</code> (for user interface, which we present to the user and receive input) and <code>server</code> (where the input is used and the magic happens).</p>
 <p>This is what happens in the <code>ui</code> function:</p>
@@ -246,14 +279,14 @@ Challenge
 <p>A very important function is <code>selectInput</code>, where we define the choices that the user has (the county names in the table) and also define the name of the variable that will hold the input from the user: <code>county</code>.</p>
 <p>The <code>server</code> is where input and output are processed. In this example we really only render the plot. You see that the name for our plot (<code>violationsPlot</code>) appears attached to the <code>output</code> variable. You can also detect our ggplot code from earlier, with the only difference that we use the input county value <code>input$county</code> to filter the data frame before we send them to ggplot to plot.</p>
 <p>The very last line of the script binds the two together as a shiny app.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(dplyr)
 
 <span class="co"># uncomment this if you need to reload the stops table</span>
 <span class="co"># stops &lt;- read.csv(&#39;https://github.com/cengel/R-data-viz/raw/master/data/MS_stops.csv&#39;)</span>
 
-## UI
+<span class="co">## UI</span>
 <span class="co"># Use a fluid Bootstrap layout</span>
 ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(    
   
@@ -279,7 +312,7 @@ ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
   )
 )
 
-## Server
+<span class="co">## Server</span>
 
 <span class="co"># Define a server for the Shiny app</span>
 server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {
@@ -294,7 +327,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
   })
 }
 
-<span class="kw">shinyApp</span>(ui, server)</code></pre></div>
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
 <p>There are numerous examples of shiny apps of different complexity, for example here: <a href="http://shiny.rstudio.com/gallery/" class="uri">http://shiny.rstudio.com/gallery/</a></p>
 
 </div>
@@ -323,10 +356,11 @@ gitbook.start({
 "facebook": false,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -336,6 +370,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/cengel/R-data-viz/edit/master/02-interactive.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["R-data-viz.pdf", "R-data-viz.epub"],
 "toc": {
